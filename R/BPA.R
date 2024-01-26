@@ -2,6 +2,9 @@
 
 library(tidyverse)
 library(openxlsx)
+library(extrafont)
+library(ggthemes)
+
 
 
 # Limpando ----------------------------------------------------------------
@@ -133,6 +136,121 @@ tab4 <- df |>
   left_join(df_bpa,by = join_by(Cod)) |>
   select(-n)
 
+
+
+# Tema gráfico ------------------------------------------------------------
+
+extrafont::loadfonts()
+tema <- ggthemes::theme_economist() +
+  theme(axis.title = element_text(
+  family = "Verdana",
+  face = "bold",
+  size = 20
+),
+axis.text = element_text(
+  family = "Verdana",
+  size = 15
+),
+plot.caption = element_text(
+  family = "Verdana",
+  face = "bold",
+  size = 15,
+  hjust = 1
+),
+legend.text = element_text(
+  family = "Verdana",
+  face = "bold",
+  size = 15
+),
+legend.title = element_text(
+  family = "Verdana",
+  size = 12 ))
+
 # Gráficos ----------------------------------------------------------------
 
 
+# 5 ramificações ----------------------------------------------------------
+
+graf1 <- df |>
+  filter(ramificacao==5) |>
+  arrange(desc(nomenclatura)) |>
+  slice_head(n=10) |>
+  mutate(Cod_fator = forcats::fct_reorder(Cod,
+                                    nomenclatura)) |>
+  ggplot() +
+  aes(x = nomenclatura, y = Cod_fator) +
+  geom_col(aes(fill = Cod),
+           color = "black",
+           show.legend = FALSE) +
+  scale_x_continuous(breaks = seq(0,180,20)) +
+  ggthemes::scale_color_economist() +
+  tema +
+  labs(title = "Quinta ramificação",
+       caption = "FONTE:Elaboração própria",
+       x = "Quantidade de nomemclaturas utilizadas",
+       y = "Código da conta") +
+  geom_label(aes(label = nomenclatura), size=10)
+
+
+ggsave("Figuras/graf1.png", graf1,dpi = 900,
+       width = 16, height = 10)
+
+
+# 4 ramificações ----------------------------------------------------------
+
+graf2 <- df |>
+  filter(ramificacao==4) |>
+  arrange(desc(nomenclatura)) |>
+  slice_head(n=10) |>
+  mutate(Cod_fator = forcats::fct_reorder(Cod,
+                                  nomenclatura)) |>
+  ggplot() +
+  aes(x = nomenclatura, y = Cod_fator) +
+  geom_col(aes(fill = Cod),
+               color = "black",
+               show.legend = FALSE) +
+  scale_x_continuous(breaks=seq(0,30,5)) +
+  ggthemes::scale_color_economist() +
+  tema +
+  labs(title = "Quarta ramificação",
+       caption = "FONTE:Elaboração própria",
+       x = "Quantidade de nomemclaturas utilizadas",
+       y = "Código da conta") +
+  geom_label(aes(label = nomenclatura), size= 10)
+
+
+ggsave("Figuras/graf2.png", graf2,dpi = 900,
+       width = 16, height = 10)
+
+
+# Boxplot -----------------------------------------------------------------
+
+graf3 <- df |>
+  filter(ramificacao > 1) |>
+  ggplot()+
+  aes(x = nomenclatura , y = ramificacao) +
+  geom_boxplot(outlier.size = 3) +
+  scale_x_continuous(breaks=seq(0,180,30)) +
+  ggthemes::scale_color_economist() +
+  tema +
+  labs(caption = "FONTE:Elaboração própria",
+       x = "Quantidade de nomemclaturas utilizadas",
+       y = "Ramificações")
+
+ggsave("Figuras/graf3.png", graf3,dpi = 900,
+       width = 16, height = 10)
+
+graf4 <- df |>
+  filter(ramificacao > 1, empresas > 47) |>
+  ggplot()+
+  aes(x = nomenclatura , y = ramificacao) +
+  geom_boxplot(outlier.size = 3) +
+  scale_x_continuous(breaks=seq(0,180,30)) +
+  ggthemes::scale_color_economist() +
+  tema +
+  labs(caption = "FONTE:Elaboração própria",
+       x = "Quantidade de nomemclaturas utilizadas",
+       y = "Ramificações")
+
+ggsave("Figuras/graf4.png", graf4,dpi = 900,
+       width = 16, height = 10)
