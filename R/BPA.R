@@ -4,6 +4,8 @@ library(tidyverse)
 library(openxlsx)
 library(extrafont)
 library(ggthemes)
+library(xtable)
+library(glue)
 
 
 
@@ -136,12 +138,25 @@ tab4 <- df |>
   left_join(df_bpa,by = join_by(Cod)) |>
   select(-n)
 
+# Exportando tabelas em Tex -----------------------------------------------
+
+tab<-xtable(tab)
+print(tab,file="Tabelas/tabela1.tex",compress=F, include.rownames = F)
+
+tab2<-xtable(tab2)
+print(tab2,file="Tabelas/tabela2.tex",compress=F, include.rownames = F)
+
+tab3<-xtable(tab3)
+print(tab3,file="Tabelas/tabela3.tex",compress=F, include.rownames = F)
+
+tab4<-xtable(tab4)
+print(tab4,file="Tabelas/tabela4.tex",compress=F, include.rownames = F)
 
 
 # Tema gráfico ------------------------------------------------------------
 
 extrafont::loadfonts()
-tema <- ggthemes::theme_economist() +
+tema <- ggthemes::theme_hc() +
   theme(axis.title = element_text(
   family = "Verdana",
   face = "bold",
@@ -183,17 +198,13 @@ graf1 <- df |>
            color = "black",
            show.legend = FALSE) +
   scale_x_continuous(breaks = seq(0,180,20)) +
-  ggthemes::scale_color_economist() +
+  ggthemes::scale_color_hc() +
   tema +
   labs(title = "Quinta ramificação",
        caption = "FONTE:Elaboração própria",
        x = "Quantidade de nomemclaturas utilizadas",
        y = "Código da conta") +
   geom_label(aes(label = nomenclatura), size=10)
-
-
-ggsave("Figuras/graf1.png", graf1,dpi = 900,
-       width = 16, height = 10)
 
 
 # 4 ramificações ----------------------------------------------------------
@@ -210,7 +221,7 @@ graf2 <- df |>
                color = "black",
                show.legend = FALSE) +
   scale_x_continuous(breaks=seq(0,30,5)) +
-  ggthemes::scale_color_economist() +
+  ggthemes::scale_color_hc() +
   tema +
   labs(title = "Quarta ramificação",
        caption = "FONTE:Elaboração própria",
@@ -218,9 +229,6 @@ graf2 <- df |>
        y = "Código da conta") +
   geom_label(aes(label = nomenclatura), size= 10)
 
-
-ggsave("Figuras/graf2.png", graf2,dpi = 900,
-       width = 16, height = 10)
 
 
 # Boxplot -----------------------------------------------------------------
@@ -237,8 +245,6 @@ graf3 <- df |>
        x = "Quantidade de nomemclaturas utilizadas",
        y = "Ramificações")
 
-ggsave("Figuras/graf3.png", graf3,dpi = 900,
-       width = 16, height = 10)
 
 graf4 <- df |>
   filter(ramificacao > 1, empresas > 47) |>
@@ -246,11 +252,40 @@ graf4 <- df |>
   aes(x = nomenclatura , y = ramificacao) +
   geom_boxplot(outlier.size = 3) +
   scale_x_continuous(breaks=seq(0,180,30)) +
-  ggthemes::scale_color_economist() +
+  ggthemes::scale_color_hc() +
   tema +
   labs(caption = "FONTE:Elaboração própria",
        x = "Quantidade de nomemclaturas utilizadas",
        y = "Ramificações")
 
-ggsave("Figuras/graf4.png", graf4,dpi = 900,
-       width = 16, height = 10)
+
+graf5 <- df |>
+  filter(ramificacao > 1) |>
+  ggplot()+
+  aes(x = nomenclatura, y = empresas,
+      color = ramificacao)+
+  geom_point(size=5) +
+  scale_x_continuous(breaks=seq(0,180,30)) +
+  ggthemes::scale_color_hc() +
+  tema +
+  labs(caption = "FONTE:Elaboração própria",
+       x = "Quantidade de nomemclaturas utilizadas",
+       y = "Quantidade de empresas")
+
+
+
+# Salvando os gráficos ----------------------------------------------------
+
+lista_g <- list()
+lista_graf <- list(graf1,graf2,graf3,graf4,graf5)
+
+for (i in 1:5) {
+  nome <- paste0("graf", i)
+  lista_g <- c(lista_g, nome)
+}
+
+purrr::walk2(lista_graf, lista_g,
+      ~ ggsave(plot = .x,
+               filename = glue('Figuras/{.y}.png'),
+               dpi = 500,
+               width = 16, height = 10))
