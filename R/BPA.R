@@ -6,6 +6,7 @@ library(extrafont)
 library(ggthemes)
 library(xtable)
 library(glue)
+library(patchwork)
 
 
 
@@ -199,12 +200,10 @@ graf1 <- df |>
            show.legend = FALSE) +
   scale_x_continuous(breaks = seq(0,180,20)) +
   ggthemes::scale_color_hc() +
-  tema +
   labs(title = "Quinta ramificação",
-       caption = "FONTE:Elaboração própria",
        x = "Quantidade de nomemclaturas utilizadas",
        y = "Código da conta") +
-  geom_label(aes(label = nomenclatura), size=10)
+  geom_label(aes(label = nomenclatura), size=7)
 
 
 # 4 ramificações ----------------------------------------------------------
@@ -222,13 +221,10 @@ graf2 <- df |>
                show.legend = FALSE) +
   scale_x_continuous(breaks=seq(0,30,5)) +
   ggthemes::scale_color_hc() +
-  tema +
   labs(title = "Quarta ramificação",
-       caption = "FONTE:Elaboração própria",
        x = "Quantidade de nomemclaturas utilizadas",
        y = "Código da conta") +
-  geom_label(aes(label = nomenclatura), size= 10)
-
+  geom_label(aes(label = nomenclatura), size= 7)
 
 
 # Boxplot -----------------------------------------------------------------
@@ -240,9 +236,7 @@ graf3 <- df |>
   geom_boxplot(outlier.size = 3) +
   scale_x_continuous(breaks=seq(0,180,30)) +
   ggthemes::scale_color_economist() +
-  tema +
-  labs(caption = "FONTE:Elaboração própria",
-       x = "Quantidade de nomemclaturas utilizadas",
+  labs(x = "Qtde de nomemclaturas utilizadas",
        y = "Ramificações")
 
 
@@ -253,9 +247,7 @@ graf4 <- df |>
   geom_boxplot(outlier.size = 3) +
   scale_x_continuous(breaks=seq(0,180,30)) +
   ggthemes::scale_color_hc() +
-  tema +
-  labs(caption = "FONTE:Elaboração própria",
-       x = "Quantidade de nomemclaturas utilizadas",
+  labs(x = "Qtde de nomemclaturas utilizadas",
        y = "Ramificações")
 
 
@@ -268,23 +260,38 @@ graf5 <- df |>
   scale_x_continuous(breaks=seq(0,180,30)) +
   ggthemes::scale_color_hc() +
   tema +
-  labs(caption = "FONTE:Elaboração própria",
-       x = "Quantidade de nomemclaturas utilizadas",
-       y = "Quantidade de empresas")
+  labs(x = "Qtde de nomemclaturas utilizadas",
+       y = "Qtde de empresas")
+
+# Patchwork ---------------------------------------------------------------
+
+fig1 <- graf1 + graf2 + plot_annotation(
+  caption = "FONTE: Elaboração própria"
+) + plot_layout(axis_titles  = "collect") & tema
 
 
+graf6 <- graf3 + graf4 + plot_annotation(
+  caption = "FONTE: Elaboração própria"
+) + plot_layout(ncol = 2,
+                axis_titles  = "collect") & tema
+
+fig2 <- graf6 / graf5 + plot_annotation(
+  tag_levels = "I",tag_suffix = ")",
+  caption = "FONTE: Elaboração própria") +
+  plot_layout(nrow = 2, axis_titles  = "collect") &
+  tema
 
 # Salvando os gráficos ----------------------------------------------------
 
 lista_g <- list()
-lista_graf <- list(graf1,graf2,graf3,graf4,graf5)
+lista_fig <- list(fig1,fig2)
 
-for (i in 1:5) {
-  nome <- paste0("graf", i)
+for (i in 1:2) {
+  nome <- paste0("fig", i)
   lista_g <- c(lista_g, nome)
 }
 
-purrr::walk2(lista_graf, lista_g,
+purrr::walk2(lista_fig, lista_g,
       ~ ggsave(plot = .x,
                filename = glue('Figuras/{.y}.png'),
                dpi = 500,
