@@ -4,7 +4,9 @@ Repositório dos scripts utilizados no desenvolvimento do artigo "A despadroniza
 
 # Informações do artigo
 A despadronização da "padronização": um olhar sob o Balanço Patrominal das empresas listadas na B3
+
 **Autores**: Lorrane Almeida de Sousa e Caio Oliveira Azevedo
+
 **Linguagens utilizadas**: R 
 
 
