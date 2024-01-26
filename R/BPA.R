@@ -142,16 +142,16 @@ tab4 <- df |>
 # Exportando tabelas em Tex -----------------------------------------------
 
 tab<-xtable(tab)
-print(tab,file="Tabelas/tabela1.tex",compress=F, include.rownames = F)
+print(tab,file="Tabelas/BPA_tabela1.tex",compress=F, include.rownames = F)
 
 tab2<-xtable(tab2)
-print(tab2,file="Tabelas/tabela2.tex",compress=F, include.rownames = F)
+print(tab2,file="Tabelas/BPA_tabela2.tex",compress=F, include.rownames = F)
 
 tab3<-xtable(tab3)
-print(tab3,file="Tabelas/tabela3.tex",compress=F, include.rownames = F)
+print(tab3,file="Tabelas/BPA_tabela3.tex",compress=F, include.rownames = F)
 
 tab4<-xtable(tab4)
-print(tab4,file="Tabelas/tabela4.tex",compress=F, include.rownames = F)
+print(tab4,file="Tabelas/BPA_tabela4.tex",compress=F, include.rownames = F)
 
 
 # Tema gráfico ------------------------------------------------------------
@@ -287,7 +287,7 @@ lista_g <- list()
 lista_fig <- list(fig1,fig2)
 
 for (i in 1:2) {
-  nome <- paste0("fig", i)
+  nome <- paste0("BPA_fig", i)
   lista_g <- c(lista_g, nome)
 }
 
