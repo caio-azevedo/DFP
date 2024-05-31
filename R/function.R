@@ -24,7 +24,6 @@ contas_barra <- function(cd){
              color = "black",
              show.legend = FALSE, width = 0.6)+
     scale_x_continuous(limits = c(0,MAX),
-                       breaks = seq(0, MAX, by = 15),
                        expand = c(0, 0),
                        position = "top") +
     scale_y_discrete(expand = expansion(add = c(0, 0.5))) +
@@ -67,4 +66,21 @@ contas_barra <- function(cd){
     theme(
       plot.margin = margin(0.02, 0.02, 0.05, 0.01, "npc")
     )
+}
+
+
+contas_barra2 <- function(ram){
+  contas <- df |>
+    filter(ramificacao==ram) |>
+    arrange(desc(nomenclatura)) |>
+    slice_head(n=10) |>
+    pull(Cod)
+
+  for (i in c(1:10)) {
+    contas_barra(contas[i])
+    purrr::walk(contas[i],
+                ~ ggsave(filename = glue('Figuras/{.x}.png'),
+                         dpi = 500,
+                         width = 16, height = 10))
+  }
 }
