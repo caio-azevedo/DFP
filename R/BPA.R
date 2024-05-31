@@ -7,6 +7,10 @@ library(ggthemes)
 library(xtable)
 library(glue)
 library(patchwork)
+library(grid)
+library(shadowtext)
+
+
 
 
 
@@ -14,6 +18,13 @@ library(patchwork)
 
 rm(list=ls())
 
+
+# list functions ----------------------------------------------------------
+my_R_files <- list.files(path ="functions", pattern = '*.R',
+                         full.names = TRUE)
+
+# Load all functions in R  ------------------------------------------------
+sapply(my_R_files, source)
 
 # Lendo um arquivo CSV ----------------------------------------------------
 
@@ -27,6 +38,15 @@ dados <- dados %>%
 # Identificar observações duplicadas em todas as colunas ------------------
 
 duplicadas <- dados[duplicated(dados), ]
+empresas_duplicadas <- unique(duplicadas$DENOM_CIA)
+length(empresas_duplicadas)
+
+
+# Identificar observações triplicadas em todas as colunas ------------------
+
+triplicadas <- duplicadas[duplicated(duplicadas), ]
+empresas_triplicadas <- unique(triplicadas$DENOM_CIA)
+length(empresas_triplicadas)
 
 
 # excluindo as observações duplicadas -------------------------------------
@@ -65,7 +85,7 @@ rm(tabela)
 
 # Salvando ----------------------------------------------------------------
 
-#openxlsx::write.xlsx(df_bpa,"df_BPA.xlsx")
+openxlsx::write.xlsx(df_bpa,"df_BPA.xlsx")
 
 
 # DF para auxiliar gráficos -----------------------------------------------
@@ -139,6 +159,12 @@ tab4 <- df |>
   left_join(df_bpa,by = join_by(Cod)) |>
   select(-n)
 
+tab5 <- df |>
+  filter(ramificacao==5) |>
+  arrange(desc(nomenclatura)) |>
+  slice_head(n=10) |>
+  select(-ramificacao)
+
 # Exportando tabelas em Tex -----------------------------------------------
 
 tab<-xtable(tab)
@@ -153,6 +179,8 @@ print(tab3,file="Tabelas/BPA_tabela3.tex",compress=F, include.rownames = F)
 tab4<-xtable(tab4)
 print(tab4,file="Tabelas/BPA_tabela4.tex",compress=F, include.rownames = F)
 
+tab5<-xtable(tab5)
+print(tab5,file="Tabelas/BPA_tabela5.tex",compress=F, include.rownames = F)
 
 # Tema gráfico ------------------------------------------------------------
 
@@ -296,3 +324,11 @@ purrr::walk2(lista_fig, lista_g,
                filename = glue('Figuras/{.y}.png'),
                dpi = 500,
                width = 16, height = 10))
+
+
+# Gráficos das contas -----------------------------------------------------
+
+for (i in c(4,5)) {
+  contas_barra2(i)
+}
+
