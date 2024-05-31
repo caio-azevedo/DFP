@@ -1,0 +1,70 @@
+contas_barra <- function(cd){
+
+  text <- dados |>
+    filter(CD_CONTA==cd) |>
+    pull(DS_CONTA)
+
+  nomenclatura <- tolower(text)
+  nomenclatura <- stri_trans_general(nomenclatura, "Latin-ASCII")
+  base <- data.frame(nomenclatura)
+
+
+  base <- base|>
+    group_by(nomenclatura) |>
+    summarise("Freq"=n()) |>
+    arrange(desc(Freq)) |>
+    slice_head(n=10) |>
+    mutate(Cod_fator = forcats::fct_reorder(nomenclatura,
+                                            Freq))
+  MAX <- max(base$Freq)
+  base |>
+    ggplot() +
+    aes(x = Freq, y = Cod_fator) +
+    geom_col(fill = "#076fa2",
+             color = "black",
+             show.legend = FALSE, width = 0.6)+
+    scale_x_continuous(limits = c(0,MAX),
+                       breaks = seq(0, MAX, by = 15),
+                       expand = c(0, 0),
+                       position = "top") +
+    scale_y_discrete(expand = expansion(add = c(0, 0.5))) +
+    theme(panel.background = element_rect(fill = "white"),
+          panel.grid.major.x = element_line(color = "#A8BAC4", size = 0.3),
+          axis.ticks.length = unit(0, "mm"),
+          axis.title = element_blank(),
+          axis.line.y.left = element_line(color = "black"),
+          axis.text.y = element_blank(),
+          axis.text.x = element_text(family = "Verdana", size = 16)) +
+    geom_shadowtext(data = subset(base, Freq < 0.2*MAX),
+                    aes(Freq, y = Cod_fator, label = Cod_fator),
+                    hjust = 0,
+                    nudge_x = 0.3,
+                    colour = "#076fa2",
+                    bg.colour = "white",
+                    bg.r = 0.2,
+                    family = "Verdana",
+                    size = 7) +
+    geom_text(
+      data = subset(base, Freq >= 0.2*MAX),
+      aes(0, y = Cod_fator, label = Cod_fator),
+      hjust = 0,
+      nudge_x = 0.3,
+      colour = "white",
+      family = "Verdana",
+      size = 7) +
+    labs(title = glue("Conta {cd}"),
+         subtitle = "As dez terminologias mais utilizadas nesta conta, em 2022."
+    ) +
+    theme(
+      plot.title = element_text(
+        family = "Verdana",
+        face = "bold",
+        size = 22
+      ),
+      plot.subtitle = element_text(
+        family = "Verdana",
+        size = 20)) +
+    theme(
+      plot.margin = margin(0.02, 0.02, 0.05, 0.01, "npc")
+    )
+}
