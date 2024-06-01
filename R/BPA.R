@@ -289,7 +289,7 @@ graf1 <- df |>
   scale_x_continuous(breaks = seq(0,180,20)) +
   ggthemes::scale_color_hc() +
   labs(title = "Quinta ramificação",
-       x = "Quantidade de nomemclaturas utilizadas",
+       x = "Quantidade de terminologias utilizadas",
        y = "Código da conta") +
   geom_label(aes(label = nomenclatura), size=7)
 
@@ -310,7 +310,7 @@ graf2 <- df |>
   scale_x_continuous(breaks=seq(0,30,5)) +
   ggthemes::scale_color_hc() +
   labs(title = "Quarta ramificação",
-       x = "Quantidade de nomemclaturas utilizadas",
+       x = "Quantidade de terminologias utilizadas",
        y = "Código da conta") +
   geom_label(aes(label = nomenclatura), size= 7)
 
@@ -324,7 +324,7 @@ graf3 <- df |>
   geom_boxplot(outlier.size = 3) +
   scale_x_continuous(breaks=seq(0,180,30)) +
   ggthemes::scale_color_economist() +
-  labs(x = "Qtde de nomemclaturas utilizadas",
+  labs(x = "Qtde de terminologias utilizadas",
        y = "Ramificações")
 
 
@@ -335,7 +335,7 @@ graf4 <- df |>
   geom_boxplot(outlier.size = 3) +
   scale_x_continuous(breaks=seq(0,180,30)) +
   ggthemes::scale_color_hc() +
-  labs(x = "Qtde de nomemclaturas utilizadas",
+  labs(x = "Qtde de terminologias utilizadas",
        y = "Ramificações")
 
 
@@ -348,7 +348,7 @@ graf5 <- df |>
   scale_x_continuous(breaks=seq(0,180,30)) +
   ggthemes::scale_color_hc() +
   tema +
-  labs(x = "Qtde de nomemclaturas utilizadas",
+  labs(x = "Qtde de terminologias utilizadas",
        y = "Qtde de empresas")
 
 # Patchwork ---------------------------------------------------------------
@@ -381,7 +381,7 @@ for (i in 1:2) {
 
 purrr::walk2(lista_fig, lista_g,
       ~ ggsave(plot = .x,
-               filename = glue('Figuras/{.y}.png'),
+               filename = glue('Figuras/BPA/{.y}.png'),
                dpi = 500,
                width = 16, height = 10))
 
@@ -389,6 +389,6 @@ purrr::walk2(lista_fig, lista_g,
 # Gráficos das contas -----------------------------------------------------
 
 for (i in c(4,5)) {
-  contas_barra2(i)
+  contas_barra_bpa(i)
 }
 

@@ -7,6 +7,9 @@ library(ggthemes)
 library(xtable)
 library(glue)
 library(patchwork)
+library(grid)
+library(shadowtext)
+library(stringi)
 
 
 
@@ -14,58 +17,135 @@ library(patchwork)
 
 rm(list=ls())
 
+# list functions ----------------------------------------------------------
+my_R_files <- list.files(path ="functions", pattern = '*.R',
+                         full.names = TRUE)
+
+# Load all functions in R  ------------------------------------------------
+sapply(my_R_files, source)
+
 
 # Lendo um arquivo CSV ----------------------------------------------------
 
 dados <- read.csv("dfp_cia_aberta_2022/dfp_cia_aberta_BPP_con_2022.csv", sep = ";",
                   fileEncoding = "latin1")
 
-dados <- dados %>%
-  filter(ORDEM_EXERC=="ÚLTIMO")
 
+dados_ <- dados |>
+  filter(ORDEM_EXERC=="ÚLTIMO", DENOM_CIA!="TC S.A.")
+
+
+# Resolvendo o problema da empresa TC.SA ----------------------------------
+
+tc_sa <- dados |>
+  filter(ORDEM_EXERC=="ÚLTIMO", VERSAO=="3", DENOM_CIA=="TC S.A.")
+
+
+# Retornando TC. SA para dados --------------------------------------------
+
+dados <- bind_rows(dados_,tc_sa)
+
+rm(dados_, tc_sa)
 
 # Identificar observações duplicadas em todas as colunas ------------------
 
 duplicadas <- dados[duplicated(dados), ]
+empresas_duplicadas <- unique(duplicadas$DENOM_CIA)
+length(empresas_duplicadas)
+
+
+# Identificar observações triplicadas em todas as colunas ------------------
+
+triplicadas <- duplicadas[duplicated(duplicadas), ]
+empresas_triplicadas <- unique(triplicadas$DENOM_CIA)
+length(empresas_triplicadas)
 
 
 # excluindo as observações duplicadas -------------------------------------
 
-dados <- unique(dados)
+dados <- dados |>
+  distinct()
 
 
 # Qtde de empresas listadas na B3 -----------------------------------------
 
-empresas <- unique(dados$DENOM_CIA)
-length(empresas)
+empresas <- dados |>
+  distinct(DENOM_CIA)
 
+count(empresas)
 
 # Qtde de contas diferentes -----------------------------------------------
 
-contas <- unique(dados$CD_CONTA)
+contas <- dados |>
+  distinct(CD_CONTA) |>
+  pull()
+
 length(contas)
+
+# Qtde de terminologias diferentes -----------------------------------------------
+
+terminologias <- dados |>
+  distinct(DS_CONTA, CD_CONTA)
+
+count(terminologias)
+
+terminologias_unica <- terminologias |>
+  distinct(DS_CONTA)
+
+count(terminologias_unica)
+
+# Qtde de terminologias desconsiderando diferenças entre maiúsculo --------
+
+terminologias_minuscula <- terminologias |>
+  mutate("DS_CONTA"= tolower(DS_CONTA)) |>
+  distinct(DS_CONTA, CD_CONTA)
+
+count(terminologias_minuscula)
+
+terminologias_minuscula_unica <- terminologias |>
+  mutate("DS_CONTA"= tolower(DS_CONTA)) |>
+  distinct(DS_CONTA)
+
+count(terminologias_minuscula_unica)
+
+
+# Qtde de terminologias desconsiderando diferenças de acentuação ----------
+
+terminologias_acento <- terminologias |>
+  mutate("DS_CONTA"= stri_trans_general(DS_CONTA, "Latin-ASCII")) |>
+  distinct(DS_CONTA, CD_CONTA)
+
+terminologias_acento_unica <- terminologias |>
+  mutate("DS_CONTA"= stri_trans_general(DS_CONTA, "Latin-ASCII")) |>
+  distinct(DS_CONTA)
+
+
+
+# Qtde de terminologias desconsiderando diferenças de acentuação e --------
+
+term_acento_min <- terminologias |>
+  mutate("DS_CONTA"= tolower(DS_CONTA),
+         "DS_CONTA"= stri_trans_general(DS_CONTA, "Latin-ASCII")) |>
+  distinct(DS_CONTA, CD_CONTA)
+
+term_acento_min_unica <- terminologias |>
+  mutate("DS_CONTA"= tolower(DS_CONTA),
+         "DS_CONTA"= stri_trans_general(DS_CONTA, "Latin-ASCII")) |>
+  distinct(DS_CONTA)
+
 
 
 # Loop --------------------------------------------------------------------
-
-tabela<- list()
-
-for (i in c(1:length(contas))) {
-  tabela[[i]] <- dados %>%
-    filter(CD_CONTA==contas[i]) %>%
+df_bpp <- map_dfr(contas, ~ {
+  dados %>%
+    filter(CD_CONTA == .x) %>%
     count(DS_CONTA) %>%
-    mutate(Cod=contas[i])
-
-  i <- i + 1
-}
-
-df_bpp<-do.call(rbind,tabela)
-
-rm(tabela)
+    mutate(Cod = .x)
+})
 
 # Salvando ----------------------------------------------------------------
 
-#openxlsx::write.xlsx(df_bpa,"df_BPP.xlsx")
+openxlsx::write.xlsx(df_bpp,"df_BPP.xlsx")
 
 
 # DF para auxiliar gráficos -----------------------------------------------
@@ -139,6 +219,12 @@ tab4 <- df |>
   left_join(df_bpp,by = join_by(Cod)) |>
   select(-n)
 
+tab5 <- df |>
+  filter(ramificacao==5) |>
+  arrange(desc(nomenclatura)) |>
+  slice_head(n=10) |>
+  select(-ramificacao)
+
 # Exportando tabelas em Tex -----------------------------------------------
 
 tab<-xtable(tab)
@@ -153,6 +239,8 @@ print(tab3,file="Tabelas/BPP_tabela3.tex",compress=F, include.rownames = F)
 tab4<-xtable(tab4)
 print(tab4,file="Tabelas/BPP_tabela4.tex",compress=F, include.rownames = F)
 
+tab5<-xtable(tab5)
+print(tab4,file="Tabelas/BPP_tabela5.tex",compress=F, include.rownames = F)
 
 # Tema gráfico ------------------------------------------------------------
 
@@ -198,10 +286,10 @@ graf1 <- df |>
   geom_col(aes(fill = Cod),
            color = "black",
            show.legend = FALSE) +
-  scale_x_continuous(breaks=breaks_pretty()) +
+  scale_x_continuous(breaks = seq(0,180,20)) +
   ggthemes::scale_color_hc() +
   labs(title = "Quinta ramificação",
-       x = "Quantidade de nomemclaturas utilizadas",
+       x = "Quantidade de terminologias utilizadas",
        y = "Código da conta") +
   geom_label(aes(label = nomenclatura), size=7)
 
@@ -219,10 +307,10 @@ graf2 <- df |>
   geom_col(aes(fill = Cod),
            color = "black",
            show.legend = FALSE) +
-  scale_x_continuous(breaks=breaks_pretty()) +
+  scale_x_continuous(breaks=seq(0,30,5)) +
   ggthemes::scale_color_hc() +
   labs(title = "Quarta ramificação",
-       x = "Quantidade de nomemclaturas utilizadas",
+       x = "Quantidade de terminologias utilizadas",
        y = "Código da conta") +
   geom_label(aes(label = nomenclatura), size= 7)
 
@@ -234,9 +322,9 @@ graf3 <- df |>
   ggplot()+
   aes(x = nomenclatura , y = ramificacao) +
   geom_boxplot(outlier.size = 3) +
-  scale_x_continuous(breaks=breaks_pretty()) +
+  scale_x_continuous(breaks=seq(0,180,30)) +
   ggthemes::scale_color_economist() +
-  labs(x = "Qtde de nomemclaturas utilizadas",
+  labs(x = "Qtde de terminologias utilizadas",
        y = "Ramificações")
 
 
@@ -245,9 +333,9 @@ graf4 <- df |>
   ggplot()+
   aes(x = nomenclatura , y = ramificacao) +
   geom_boxplot(outlier.size = 3) +
-  scale_x_continuous(breaks=breaks_pretty()) +
+  scale_x_continuous(breaks=seq(0,180,30)) +
   ggthemes::scale_color_hc() +
-  labs(x = "Qtde de nomemclaturas utilizadas",
+  labs(x = "Qtde de terminologias utilizadas",
        y = "Ramificações")
 
 
@@ -257,10 +345,10 @@ graf5 <- df |>
   aes(x = nomenclatura, y = empresas,
       color = ramificacao)+
   geom_point(size=5) +
-  scale_x_continuous(breaks=breaks_pretty()) +
+  scale_x_continuous(breaks=seq(0,180,30)) +
   ggthemes::scale_color_hc() +
   tema +
-  labs(x = "Qtde de nomemclaturas utilizadas",
+  labs(x = "Qtde de terminologias utilizadas",
        y = "Qtde de empresas")
 
 # Patchwork ---------------------------------------------------------------
@@ -293,6 +381,12 @@ for (i in 1:2) {
 
 purrr::walk2(lista_fig, lista_g,
              ~ ggsave(plot = .x,
-                      filename = glue('Figuras/{.y}.png'),
+                      filename = glue('Figuras/BPP/{.y}.png'),
                       dpi = 500,
                       width = 16, height = 10))
+
+# Gráficos das contas -----------------------------------------------------
+
+for (i in c(4,5)) {
+  contas_barra_bpp(i)
+}

@@ -1,4 +1,4 @@
-contas_barra2 <- function(ram){
+contas_barra_bpp <- function(ram){
   contas <- df |>
     filter(ramificacao==ram) |>
     arrange(desc(nomenclatura)) |>
@@ -8,7 +8,8 @@ contas_barra2 <- function(ram){
   for (i in c(1:10)) {
     contas_barra(contas[i])
     purrr::walk(contas[i],
-                ~ ggsave(filename = glue('Figuras/{.x}.png'),
+                ~ ggsave(filename = ifelse(ram==4,glue('Figuras/BPP/Quarta/{.x}.png'),
+                                           glue('Figuras/BPP/Quinta/{.x}.png')),
                          dpi = 500,
                          width = 16, height = 10))
   }
