@@ -47,18 +47,23 @@ dados <- bind_rows(dados_,tc_sa)
 
 rm(dados_, tc_sa)
 
+# Qtde de empresas listadas na B3 -----------------------------------------
+
+empresas <- dados |>
+  distinct(DENOM_CIA)
+
+
 # Identificar observações duplicadas em todas as colunas ------------------
 
 duplicadas <- dados[duplicated(dados), ]
-empresas_duplicadas <- unique(duplicadas$DENOM_CIA)
-length(empresas_duplicadas)
+empresas_duplicadas <- data.frame("n"=unique(duplicadas$DENOM_CIA))
 
 
 # Identificar observações triplicadas em todas as colunas ------------------
 
 triplicadas <- duplicadas[duplicated(duplicadas), ]
-empresas_triplicadas <- unique(triplicadas$DENOM_CIA)
-length(empresas_triplicadas)
+empresas_triplicadas <- data.frame("n"=unique(triplicadas$DENOM_CIA))
+
 
 
 # excluindo as observações duplicadas -------------------------------------
@@ -67,32 +72,35 @@ dados <- dados |>
   distinct()
 
 
-# Qtde de empresas listadas na B3 -----------------------------------------
-
-empresas <- dados |>
-  distinct(DENOM_CIA)
-
-count(empresas)
-
 # Qtde de contas diferentes -----------------------------------------------
 
 contas <- dados |>
   distinct(CD_CONTA) |>
   pull()
 
-length(contas)
 
 # Qtde de terminologias diferentes -----------------------------------------------
 
 terminologias <- dados |>
   distinct(DS_CONTA, CD_CONTA)
 
-count(terminologias)
+
 
 terminologias_unica <- terminologias |>
   distinct(DS_CONTA)
 
-count(terminologias_unica)
+
+sumario <- bind_rows(count(empresas),count(empresas_duplicadas),
+                     count(empresas_triplicadas), count(as.data.frame(contas)),
+                     count(terminologias_unica),
+                     round(count(terminologias_unica)/count(as.data.frame(contas)),2))
+
+row.names(sumario) <- c("Nº de empresas",
+                        "Nº de emp. com informações duplicadas",
+                        "Nº de emp. com informações triplicadas",
+                        "Nº de contas diferentes",
+                        "Nº de terminologias diferentes",
+                        "Média de terminologias por conta")
 
 # Qtde de terminologias desconsiderando diferenças entre maiúsculo --------
 
@@ -145,7 +153,7 @@ df_bpp <- map_dfr(contas, ~ {
 
 # Salvando ----------------------------------------------------------------
 
-openxlsx::write.xlsx(df_bpp,"df_BPP.xlsx")
+openxlsx::write.xlsx(df_bpp,"data/df_BPP.xlsx")
 
 
 # DF para auxiliar gráficos -----------------------------------------------
