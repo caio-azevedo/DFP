@@ -9,7 +9,7 @@ library(glue)
 library(patchwork)
 library(grid)
 library(shadowtext)
-
+library(stringi)
 
 
 
@@ -31,9 +31,21 @@ sapply(my_R_files, source)
 dados <- read.csv("dfp_cia_aberta_2022/dfp_cia_aberta_BPA_con_2022.csv", sep = ";",
                   fileEncoding = "latin1")
 
-dados <- dados %>%
-  filter(ORDEM_EXERC=="ÚLTIMO")
+dados_ <- dados |>
+  filter(ORDEM_EXERC=="ÚLTIMO", DENOM_CIA!="TC S.A.")
 
+
+# Resolvendo o problema da empresa TC.SA ----------------------------------
+
+tc_sa <- dados |>
+  filter(ORDEM_EXERC=="ÚLTIMO", VERSAO=="3", DENOM_CIA=="TC S.A.")
+
+
+# Retornando TC. SA para dados --------------------------------------------
+
+dados <- bind_rows(dados_,tc_sa)
+
+rm(dados_, tc_sa)
 
 # Identificar observações duplicadas em todas as colunas ------------------
 
@@ -51,37 +63,85 @@ length(empresas_triplicadas)
 
 # excluindo as observações duplicadas -------------------------------------
 
-dados <- unique(dados)
+dados <- dados |>
+  distinct()
 
 
 # Qtde de empresas listadas na B3 -----------------------------------------
 
-empresas <- unique(dados$DENOM_CIA)
-length(empresas)
+empresas <- dados |>
+  distinct(DENOM_CIA)
 
+count(empresas)
 
 # Qtde de contas diferentes -----------------------------------------------
 
-contas <- unique(dados$CD_CONTA)
+contas <- dados |>
+  distinct(CD_CONTA) |>
+  pull()
+
 length(contas)
+
+# Qtde de terminologias diferentes -----------------------------------------------
+
+terminologias <- dados |>
+  distinct(DS_CONTA, CD_CONTA)
+
+count(terminologias)
+
+terminologias_unica <- terminologias |>
+  distinct(DS_CONTA)
+
+count(terminologias_unica)
+
+# Qtde de terminologias desconsiderando diferenças entre maiúsculo --------
+
+terminologias_minuscula <- terminologias |>
+  mutate("DS_CONTA"= tolower(DS_CONTA)) |>
+  distinct(DS_CONTA, CD_CONTA)
+
+count(terminologias_minuscula)
+
+terminologias_minuscula_unica <- terminologias |>
+  mutate("DS_CONTA"= tolower(DS_CONTA)) |>
+  distinct(DS_CONTA)
+
+count(terminologias_minuscula_unica)
+
+
+# Qtde de terminologias desconsiderando diferenças de acentuação ----------
+
+terminologias_acento <- terminologias |>
+  mutate("DS_CONTA"= stri_trans_general(DS_CONTA, "Latin-ASCII")) |>
+  distinct(DS_CONTA, CD_CONTA)
+
+terminologias_acento_unica <- terminologias |>
+  mutate("DS_CONTA"= stri_trans_general(DS_CONTA, "Latin-ASCII")) |>
+  distinct(DS_CONTA)
+
+
+
+# Qtde de terminologias desconsiderando diferenças de acentuação e --------
+
+term_acento_min <- terminologias |>
+  mutate("DS_CONTA"= tolower(DS_CONTA),
+         "DS_CONTA"= stri_trans_general(DS_CONTA, "Latin-ASCII")) |>
+  distinct(DS_CONTA, CD_CONTA)
+
+term_acento_min_unica <- terminologias |>
+  mutate("DS_CONTA"= tolower(DS_CONTA),
+         "DS_CONTA"= stri_trans_general(DS_CONTA, "Latin-ASCII")) |>
+  distinct(DS_CONTA)
 
 
 # Loop --------------------------------------------------------------------
-
-tabela<- list()
-
-for (i in c(1:length(contas))) {
-  tabela[[i]] <- dados %>%
-    filter(CD_CONTA==contas[i]) %>%
+df_bpa <- map_dfr(contas, ~ {
+  dados %>%
+    filter(CD_CONTA == .x) %>%
     count(DS_CONTA) %>%
-    mutate(Cod=contas[i])
+    mutate(Cod = .x)
+})
 
-  i <- i + 1
-}
-
-df_bpa<-do.call(rbind,tabela)
-
-rm(tabela)
 
 # Salvando ----------------------------------------------------------------
 
