@@ -72,6 +72,10 @@ empresas_triplicadas <- data.frame("n"=unique(triplicadas$DENOM_CIA))
 dados <- dados |>
   distinct()
 
+# Salvando ----------------------------------------------------------------
+
+openxlsx::write.xlsx(dados,"data/dfp_corrigido_BPA_con_2022.xlsx")
+
 
 # Qtde de contas diferentes -----------------------------------------------
 
@@ -85,11 +89,11 @@ contas <- dados |>
 terminologias <- dados |>
   distinct(DS_CONTA, CD_CONTA)
 
-
-
 terminologias_unica <- terminologias |>
   distinct(DS_CONTA)
 
+
+# Sumário -----------------------------------------------------------------
 
 sumario <- bind_rows(count(empresas),count(empresas_duplicadas),
                      count(empresas_triplicadas), count(as.data.frame(contas)),
@@ -109,14 +113,9 @@ terminologias_minuscula <- terminologias |>
   mutate("DS_CONTA"= tolower(DS_CONTA)) |>
   distinct(DS_CONTA, CD_CONTA)
 
-count(terminologias_minuscula)
-
 terminologias_minuscula_unica <- terminologias |>
   mutate("DS_CONTA"= tolower(DS_CONTA)) |>
   distinct(DS_CONTA)
-
-count(terminologias_minuscula_unica)
-
 
 # Qtde de terminologias desconsiderando diferenças de acentuação ----------
 
@@ -184,18 +183,6 @@ df <- df |>
   relocate(ramificacao, .before = empresas) |>
   rename("nomenclatura"=n)
 
-avaliacao <- df|>
-  filter(nomenclatura > 1) |>
-  mutate(aval = nomenclatura/empresas) |>
-  mutate(nível = if_else(aval <= 0.10,1,
-                  if_else(aval > 0.10 & aval<=0.20,2,
-                    if_else(aval > 0.2 & aval <= 0.4,3,
-                      if_else(aval > 0.4 & aval <= 0.6, 4,
-                        if_else(aval >0.6 & aval < 1,5,
-                          if_else(aval == 1 & empresas > 10,5,0))))))) |>
-  arrange(desc(nível),ramificacao,desc(nomenclatura)) |>
-  select(-aval)
-
 
 # Tabelas -----------------------------------------------------------------
 
@@ -234,6 +221,28 @@ tab5 <- df |>
   slice_head(n=10) |>
   select(-ramificacao)
 
+# Tabela para as terminologias --------------------------------------------
+
+
+term <- bind_rows(count(terminologias), count(terminologias_minuscula),
+                  count(terminologias_acento), count(term_acento_min))
+
+
+term_unica <- bind_rows(count(terminologias_unica),
+                        count(terminologias_minuscula_unica),
+                        count(terminologias_acento_unica),
+                        count(term_acento_min_unica))
+
+
+tipo <- c("Qtde de terminologias diferentes",
+          "Qtde de term. desconsiderando diferenças entre maiúsculo e minúsculo",
+          "Qtde de term. desconsiderando diferenças de acentuação",
+          "Qtde de term. desconsiderando diferenças de acentuação e
+          maiúsculo/minúsculo")
+
+tab6 <-  data.frame("Tipo"= tipo,
+                        "(1)" = term, "(2)" = term_unica)
+
 # Exportando tabelas em Tex -----------------------------------------------
 
 tab<-xtable(tab)
@@ -250,6 +259,9 @@ print(tab4,file="Tabelas/BPA_tabela4.tex",compress=F, include.rownames = F)
 
 tab5<-xtable(tab5)
 print(tab5,file="Tabelas/BPA_tabela5.tex",compress=F, include.rownames = F)
+
+tab6<-xtable(tab6)
+print(tab6,file="Tabelas/BPA_tabela6.tex",compress=F, include.rownames = F)
 
 # Tema gráfico ------------------------------------------------------------
 
