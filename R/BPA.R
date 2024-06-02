@@ -372,6 +372,17 @@ graf5 <- df |>
   labs(x = "Qtde de terminologias utilizadas",
        y = "Qtde de empresas")
 
+fig3 <- df |>
+  filter(ramificacao > 1) |>
+  ggplot()+
+  aes(x = nomenclatura, y = empresas, color = "#076fa2")+
+  geom_point(size=4) + facet_wrap(~ ramificacao, nrow = 2) +
+  scale_x_continuous(breaks=seq(0,180,30)) +
+  ggthemes::scale_color_hc() +
+  tema + theme(strip.text = element_text(size = 16)) +
+  labs(x = "Qtde de terminologias utilizadas",
+       y = "Qtde de empresas") + guides(color = "none")
+
 # Patchwork ---------------------------------------------------------------
 
 fig1 <- graf1 + graf2 + plot_annotation(
@@ -393,9 +404,9 @@ fig2 <- graf6 / graf5 + plot_annotation(
 # Salvando os gráficos ----------------------------------------------------
 
 lista_g <- list()
-lista_fig <- list(fig1,fig2)
+lista_fig <- list(fig1,fig2,fig3)
 
-for (i in 1:2) {
+for (i in 1:3) {
   nome <- paste0("BPA_fig", i)
   lista_g <- c(lista_g, nome)
 }

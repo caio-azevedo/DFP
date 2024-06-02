@@ -306,7 +306,7 @@ graf1 <- df |>
   geom_col(aes(fill = Cod),
            color = "black",
            show.legend = FALSE) +
-  scale_x_continuous(breaks = seq(0,180,20)) +
+  scale_x_continuous(breaks = seq(0,270,30)) +
   ggthemes::scale_color_hc() +
   labs(title = "Quinta ramificação",
        x = "Quantidade de terminologias utilizadas",
@@ -327,7 +327,7 @@ graf2 <- df |>
   geom_col(aes(fill = Cod),
            color = "black",
            show.legend = FALSE) +
-  scale_x_continuous(breaks=seq(0,30,5)) +
+  scale_x_continuous(breaks=seq(0,140,10)) +
   ggthemes::scale_color_hc() +
   labs(title = "Quarta ramificação",
        x = "Quantidade de terminologias utilizadas",
@@ -342,7 +342,7 @@ graf3 <- df |>
   ggplot()+
   aes(x = nomenclatura , y = ramificacao) +
   geom_boxplot(outlier.size = 3) +
-  scale_x_continuous(breaks=seq(0,180,30)) +
+  scale_x_continuous(breaks=seq(0,270,30)) +
   ggthemes::scale_color_economist() +
   labs(x = "Qtde de terminologias utilizadas",
        y = "Ramificações")
@@ -353,7 +353,7 @@ graf4 <- df |>
   ggplot()+
   aes(x = nomenclatura , y = ramificacao) +
   geom_boxplot(outlier.size = 3) +
-  scale_x_continuous(breaks=seq(0,180,30)) +
+  scale_x_continuous(breaks=seq(0,270,30)) +
   ggthemes::scale_color_hc() +
   labs(x = "Qtde de terminologias utilizadas",
        y = "Ramificações")
@@ -365,11 +365,22 @@ graf5 <- df |>
   aes(x = nomenclatura, y = empresas,
       color = ramificacao)+
   geom_point(size=5) +
-  scale_x_continuous(breaks=seq(0,180,30)) +
+  scale_x_continuous(breaks=seq(0,270,30)) +
   ggthemes::scale_color_hc() +
   tema +
   labs(x = "Qtde de terminologias utilizadas",
        y = "Qtde de empresas")
+
+fig3 <- df |>
+  filter(ramificacao > 1) |>
+  ggplot()+
+  aes(x = nomenclatura, y = empresas, color = "#076fa2")+
+  geom_point(size=4) + facet_wrap(~ ramificacao, nrow = 2) +
+  scale_x_continuous(breaks=seq(0,270,30)) +
+  ggthemes::scale_color_hc() +
+  tema + theme(strip.text = element_text(size = 16)) +
+  labs(x = "Qtde de terminologias utilizadas",
+       y = "Qtde de empresas") +guides(color = "none")
 
 # Patchwork ---------------------------------------------------------------
 
@@ -392,9 +403,9 @@ fig2 <- graf6 / graf5 + plot_annotation(
 # Salvando os gráficos ----------------------------------------------------
 
 lista_g <- list()
-lista_fig <- list(fig1,fig2)
+lista_fig <- list(fig1,fig2,fig3)
 
-for (i in 1:2) {
+for (i in 1:3) {
   nome <- paste0("BPP_fig", i)
   lista_g <- c(lista_g, nome)
 }
