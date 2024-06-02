@@ -304,7 +304,7 @@ graf1 <- df |>
                                     nomenclatura)) |>
   ggplot() +
   aes(x = nomenclatura, y = Cod_fator) +
-  geom_col(aes(fill = Cod),
+  geom_col(fill = "#076fa2",,
            color = "black",
            show.legend = FALSE) +
   scale_x_continuous(breaks = seq(0,180,20)) +
@@ -325,7 +325,7 @@ graf2 <- df |>
                                   nomenclatura)) |>
   ggplot() +
   aes(x = nomenclatura, y = Cod_fator) +
-  geom_col(aes(fill = Cod),
+  geom_col(fill = "#076fa2",
                color = "black",
                show.legend = FALSE) +
   scale_x_continuous(breaks=seq(0,30,5)) +
@@ -375,13 +375,14 @@ graf5 <- df |>
 fig3 <- df |>
   filter(ramificacao > 1) |>
   ggplot()+
-  aes(x = nomenclatura, y = empresas, color = "#076fa2")+
+  aes(x = nomenclatura, y = empresas, color = ramificacao)+
   geom_point(size=4) + facet_wrap(~ ramificacao, nrow = 2) +
   scale_x_continuous(breaks=seq(0,180,30)) +
   ggthemes::scale_color_hc() +
   tema + theme(strip.text = element_text(size = 16)) +
   labs(x = "Qtde de terminologias utilizadas",
-       y = "Qtde de empresas") + guides(color = "none")
+       y = "Qtde de empresas") + guides(color = "none") +
+  scale_color_canva()
 
 # Patchwork ---------------------------------------------------------------
 
