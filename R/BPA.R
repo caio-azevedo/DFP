@@ -279,28 +279,10 @@ tipo <- c("Qtde de terminologias diferentes",
 tab6 <-  data.frame("Tipo"= tipo,
                         "(1)" = term, "(2)" = term_unica)
 
-# Sumário de contas por empresas ------------------------------------------
-
-tab7 <- dados |>
-  group_by(DENOM_CIA) |>
-  summarise("Freq"=n()) |>
-  reframe("Mínimo"=min(Freq),
-          "Máximo"=max(Freq),
-          "Média"=round(mean(Freq),2),
-          "Mediana"=median(Freq),
-          "Moda"=Moda(Freq),
-          "Desvio Padrão"=round(sd(Freq),2),
-          "Primeiro quartil"=quantile(Freq,0.25),
-          "Terceiro quartil"=quantile(Freq,0.75),
-          "Assimetria" = skewness(Freq),
-          "Curtose" = kurtosis(Freq))|>
-  pivot_longer(cols = everything(),
-               names_to = "Estatística",
-               values_to = "Valor")
 
 # Exportando tabelas em Tex -----------------------------------------------
 
-tab_list <- list(tab, tab2, tab3, tab4, tab5, tab6, tab7)
+tab_list <- list(tab, tab2, tab3, tab4, tab5, tab6)
 
 walk2(tab_list, seq_along(tab_list), tabelas_BPA)
 
