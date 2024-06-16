@@ -10,7 +10,7 @@ contas_barra_bpa <- function(ram){
     purrr::walk(contas[i],
                 ~ ggsave(filename = ifelse(ram==4,glue('Figuras/BPA/Quarta/{.x}.png'),
                                            glue('Figuras/BPA/Quinta/{.x}.png')),
-                         dpi = 500,
+                         dpi = 200,
                          width = 16, height = 10))
   }
 }

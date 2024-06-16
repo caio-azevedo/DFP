@@ -10,6 +10,8 @@ library(patchwork)
 library(grid)
 library(shadowtext)
 library(stringi)
+library(moments)
+library(GetFREData)
 
 
 
@@ -26,16 +28,18 @@ my_R_files <- list.files(path ="functions", pattern = '*.R',
 # Load all functions in R  ------------------------------------------------
 sapply(my_R_files, source)
 
-# Lendo um arquivo CSV ----------------------------------------------------
 
-dados <- read.csv("dfp_cia_aberta_2022/dfp_cia_aberta_BPA_con_2022.csv", sep = ";",
-                  fileEncoding = "latin1")
+# Lendo os arquivos ----------------------------------------------------
 
-dados_ <- dados |>
-  filter(ORDEM_EXERC=="ÚLTIMO", DENOM_CIA!="TC S.A.")
+dados <- read_dfp(2022, "BPA")
+
+source("R/cad_cia.R")
 
 
 # Resolvendo o problema da empresa TC.SA ----------------------------------
+
+dados_ <- dados |>
+  filter(ORDEM_EXERC=="ÚLTIMO", DENOM_CIA!="TC S.A.")
 
 tc_sa <- dados |>
   filter(ORDEM_EXERC=="ÚLTIMO", VERSAO=="3", DENOM_CIA=="TC S.A.")
@@ -72,9 +76,41 @@ empresas_triplicadas <- data.frame("n"=unique(triplicadas$DENOM_CIA))
 dados <- dados |>
   distinct()
 
+
+# Adicionado os setores ---------------------------------------------------
+
+cad_cia <- semi_join(cad_cia,dados,by=c("CD_CVM"))
+
+dados <- inner_join(dados,cad_cia)
+
+# Listar todos os objetos no ambiente que começam com "cad" ---------------
+
+objetos_cad <- ls(pattern = "^cad")
+
+
+# Remover esses objetos ---------------------------------------------------
+
+rm(list = objetos_cad, objetos_cad)
+
+
+# Criando a base somente de bancos ----------------------------------------
+
+bancos <- dados |>
+  filter(SETOR_ATIV=="Bancos")
+
+
+# Retirando os bancos da base ---------------------------------------------
+
+dados <- dados |>
+  filter(SETOR_ATIV!="Bancos")
+
+
 # Salvando ----------------------------------------------------------------
 
 openxlsx::write.xlsx(dados,"data/dfp_corrigido_BPA_con_2022.xlsx")
+
+openxlsx::write.xlsx(bancos,"data/dfp_bancos_BPA_con_2022.xlsx")
+
 
 
 # Qtde de contas diferentes -----------------------------------------------
@@ -206,14 +242,14 @@ tab3 <- df |>
   filter(ramificacao=="5",
          empresas>=47, nomenclatura==1) |>
   left_join(df_bpa,by = join_by(Cod)) |>
-  select(-n)
+  select(-c(n, ramificacao, nomenclatura))
 
 
 tab4 <- df |>
   filter(ramificacao=="4",
          empresas>=47, nomenclatura==1) |>
   left_join(df_bpa,by = join_by(Cod)) |>
-  select(-n)
+  select(-c(n, ramificacao, nomenclatura))
 
 tab5 <- df |>
   filter(ramificacao==5) |>
@@ -243,25 +279,30 @@ tipo <- c("Qtde de terminologias diferentes",
 tab6 <-  data.frame("Tipo"= tipo,
                         "(1)" = term, "(2)" = term_unica)
 
+# Sumário de contas por empresas ------------------------------------------
+
+tab7 <- dados |>
+  group_by(DENOM_CIA) |>
+  summarise("Freq"=n()) |>
+  reframe("Mínimo"=min(Freq),
+          "Máximo"=max(Freq),
+          "Média"=round(mean(Freq),2),
+          "Mediana"=median(Freq),
+          "Moda"=Moda(Freq),
+          "Desvio Padrão"=round(sd(Freq),2),
+          "Primeiro quartil"=quantile(Freq,0.25),
+          "Terceiro quartil"=quantile(Freq,0.75),
+          "Assimetria" = skewness(Freq),
+          "Curtose" = kurtosis(Freq))|>
+  pivot_longer(cols = everything(),
+               names_to = "Estatística",
+               values_to = "Valor")
+
 # Exportando tabelas em Tex -----------------------------------------------
 
-tab<-xtable(tab)
-print(tab,file="Tabelas/BPA_tabela1.tex",compress=F, include.rownames = F)
+tab_list <- list(tab, tab2, tab3, tab4, tab5, tab6, tab7)
 
-tab2<-xtable(tab2)
-print(tab2,file="Tabelas/BPA_tabela2.tex",compress=F, include.rownames = F)
-
-tab3<-xtable(tab3)
-print(tab3,file="Tabelas/BPA_tabela3.tex",compress=F, include.rownames = F)
-
-tab4<-xtable(tab4)
-print(tab4,file="Tabelas/BPA_tabela4.tex",compress=F, include.rownames = F)
-
-tab5<-xtable(tab5)
-print(tab5,file="Tabelas/BPA_tabela5.tex",compress=F, include.rownames = F)
-
-tab6<-xtable(tab6)
-print(tab6,file="Tabelas/BPA_tabela6.tex",compress=F, include.rownames = F)
+walk2(tab_list, seq_along(tab_list), tabelas_BPA)
 
 # Tema gráfico ------------------------------------------------------------
 
@@ -376,10 +417,10 @@ fig3 <- df |>
   filter(ramificacao > 1) |>
   ggplot()+
   aes(x = nomenclatura, y = empresas, color = ramificacao)+
-  geom_point(size=4) + facet_wrap(~ ramificacao, nrow = 2) +
+  geom_point(size=5) + facet_wrap(~ ramificacao, nrow = 2) +
   scale_x_continuous(breaks=seq(0,180,30)) +
   ggthemes::scale_color_hc() +
-  tema + theme(strip.text = element_text(size = 16)) +
+  tema + theme(strip.text = element_text(size = 20)) +
   labs(x = "Qtde de terminologias utilizadas",
        y = "Qtde de empresas") + guides(color = "none") +
   scale_color_canva()
