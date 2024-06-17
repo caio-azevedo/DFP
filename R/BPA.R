@@ -438,7 +438,7 @@ for (i in 1:3) {
 purrr::walk2(lista_fig, lista_g,
       ~ ggsave(plot = .x,
                filename = glue('Figuras/BPA/{.y}.png'),
-               dpi = 500,
+               dpi = 200,
                width = 16, height = 10))
 
 
