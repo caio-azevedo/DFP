@@ -320,7 +320,7 @@ graf1 <- df |>
                                           nomenclatura)) |>
   ggplot() +
   aes(x = nomenclatura, y = Cod_fator) +
-  geom_col(fill = "#076fa2",,
+  geom_col(fill = "#4C9900",,
            color = "black",
            show.legend = FALSE) +
   scale_x_continuous(breaks = seq(0,270,30)) +
@@ -341,7 +341,7 @@ graf2 <- df |>
                                           nomenclatura)) |>
   ggplot() +
   aes(x = nomenclatura, y = Cod_fator) +
-  geom_col(fill = "#076fa2",
+  geom_col(fill = "#4C9900",
            color = "black",
            show.legend = FALSE) +
   scale_x_continuous(breaks=seq(0,140,10)) +
@@ -401,19 +401,14 @@ fig3 <- df |>
 
 # Patchwork ---------------------------------------------------------------
 
-fig1 <- graf1 + graf2 + plot_annotation(
-  caption = "FONTE: Elaboração própria"
-) + plot_layout(axis_titles  = "collect") & tema
+fig1 <- graf1 + graf2  + plot_layout(axis_titles  = "collect") & tema
 
 
-graf6 <- graf3 + graf4 + plot_annotation(
-  caption = "FONTE: Elaboração própria"
-) + plot_layout(ncol = 2,
+graf6 <- graf3 + graf4 + plot_layout(ncol = 2,
                 axis_titles  = "collect") & tema
 
 fig2 <- graf6 / graf5 + plot_annotation(
-  tag_levels = "I",tag_suffix = ")",
-  caption = "FONTE: Elaboração própria") +
+  tag_levels = "I",tag_suffix = ")") +
   plot_layout(nrow = 2, axis_titles  = "collect") &
   tema
 

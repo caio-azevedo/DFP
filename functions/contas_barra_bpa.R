@@ -6,7 +6,7 @@ contas_barra_bpa <- function(ram){
     pull(Cod)
 
   for (i in c(1:10)) {
-    contas_barra(contas[i])
+    contas_barra_1(contas[i])
     purrr::walk(contas[i],
                 ~ ggsave(filename = ifelse(ram==4,glue('Figuras/BPA/Quarta/{.x}.png'),
                                            glue('Figuras/BPA/Quinta/{.x}.png')),

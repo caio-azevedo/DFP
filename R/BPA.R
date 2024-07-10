@@ -409,19 +409,14 @@ fig3 <- df |>
 
 # Patchwork ---------------------------------------------------------------
 
-fig1 <- graf1 + graf2 + plot_annotation(
-  caption = "FONTE: Elaboração própria"
-) + plot_layout(axis_titles  = "collect") & tema
+fig1 <- graf1 + graf2 +  plot_layout(axis_titles  = "collect") & tema
 
 
-graf6 <- graf3 + graf4 + plot_annotation(
-  caption = "FONTE: Elaboração própria"
-) + plot_layout(ncol = 2,
+graf6 <- graf3 + graf4 + plot_layout(ncol = 2,
                 axis_titles  = "collect") & tema
 
 fig2 <- graf6 / graf5 + plot_annotation(
-  tag_levels = "I",tag_suffix = ")",
-  caption = "FONTE: Elaboração própria") +
+  tag_levels = "I",tag_suffix = ")") +
   plot_layout(nrow = 2, axis_titles  = "collect") &
   tema
 
