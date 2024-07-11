@@ -309,7 +309,9 @@ tema <- ggthemes::theme_hc() +
   ),
   legend.title = element_text(
     family = "Verdana",
-    size = 12 ))
+    size = 12
+    )
+  )
 
 # Gráficos ----------------------------------------------------------------
 
@@ -329,7 +331,7 @@ graf1 <- df |>
            show.legend = FALSE) +
   scale_x_continuous(breaks = seq(0,270,30), limits = c(0,270)) +
   ggthemes::scale_color_hc() +
-  labs(title = "Quinta ramificação",
+  labs(title = "Quinto Nível",
        x = "Quantidade de terminologias utilizadas",
        y = "Código da conta") +
   geom_label(aes(label = nomenclatura), size=7)
@@ -350,7 +352,7 @@ graf2 <- df |>
            show.legend = FALSE) +
   scale_x_continuous(breaks=seq(0,135,15), limits = c(0,135)) +
   ggthemes::scale_color_hc() +
-  labs(title = "Quarta ramificação",
+  labs(title = "Quarto Nível",
        x = "Quantidade de terminologias utilizadas",
        y = "Código da conta") +
   geom_label(aes(label = nomenclatura), size= 7)
@@ -365,7 +367,7 @@ graf3 <- df |>
   scale_x_continuous(breaks=seq(0,270,30)) +
   ggthemes::scale_color_economist() +
   labs(x = "Qtde de terminologias utilizadas",
-       y = "Ramificações")
+       y = "Nível")
 
 
 graf4 <- df |>
@@ -376,7 +378,7 @@ graf4 <- df |>
   scale_x_continuous(breaks=seq(0,270,30)) +
   ggthemes::scale_color_hc() +
   labs(x = "Qtde de terminologias utilizadas",
-       y = "Ramificações")
+       y = "Nível")
 
 
 graf5 <- df |>
@@ -392,20 +394,25 @@ graf5 <- df |>
        y = "Qtde de empresas")
 
 fig3 <- df |>
-  filter(ramificacao > 1) |>
+  filter(ramificacao > 3) |>
   ggplot()+
-  aes(x = nomenclatura, y = empresas, color = ramificacao)+
-  geom_point(size=4) + facet_wrap(~ ramificacao, nrow = 2) +
+  aes(x = nomenclatura, y = empresas)+
+  geom_point(size=4, colour = "#4C9900") + facet_wrap(~ ramificacao, nrow = 2) +
   scale_x_continuous(breaks=seq(0,270,30)) +
   ggthemes::scale_color_hc() +
-  tema + theme(strip.text = element_text(size = 16)) +
+  tema + theme(strip.text = element_text(size = 25,
+                                         family = "Verdana",
+                                         face = "bold",
+                                         color = "white"),
+               strip.background = element_rect(
+                 fill = "#4C9900"
+               )) +
   labs(x = "Qtde de terminologias utilizadas",
        y = "Qtde de empresas") +guides(color = "none") +
   scale_color_canva()
-
 # Patchwork ---------------------------------------------------------------
 
-fig1 <- graf1 + graf2  + plot_layout(axis_titles  = "collect") & tema
+fig1 <- graf2 + graf1  + plot_layout(axis_titles  = "collect") & tema
 
 
 graf6 <- graf3 + graf4 + plot_layout(ncol = 2,
