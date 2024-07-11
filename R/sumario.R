@@ -1,7 +1,19 @@
 library(tidyverse)
 library(openxlsx)
 library(glue)
-library(GetFREData) # Supondo que read_dfp vem deste pacote
+
+
+# Limpando ----------------------------------------------------------------
+
+rm(list=ls())
+
+
+# list functions ----------------------------------------------------------
+my_R_files <- list.files(path ="functions", pattern = '*.R',
+                         full.names = TRUE)
+
+# Load all functions in R  ------------------------------------------------
+sapply(my_R_files, source)
 
 # Carregando funções personalizadas e dados das empresas
 source("R/cad_cia.R")
@@ -37,8 +49,11 @@ dados_lista <- map(bp, ~ {
     inner_join(semi_join(cad_cia, ., by = "CD_CVM"))
 
   # Segmentação dos dados em bancos e não bancos
-  bancos <- dados %>% filter(SETOR_ATIV == "Bancos")
-  dados_nao_bancos <- dados %>% filter(SETOR_ATIV != "Bancos")
+  bancos <- dados %>% filter(SETOR_ATIV == "Bancos"| DENOM_CIA %in% c("BRAZILIAN FINANCE E REAL ESTATE S.A.",
+                                                                  "XP INVESTIMENTOS S.A."))
+  dados_nao_bancos <- dados %>% filter(SETOR_ATIV != "Bancos") %>%
+    filter(!DENOM_CIA %in% c("BRAZILIAN FINANCE E REAL ESTATE S.A.",
+                             "XP INVESTIMENTOS S.A."))
 
   # Salvamento dos dados processados
   write.xlsx(dados_nao_bancos, glue("data/dfp_corrigido_{.x}_con_2022.xlsx"))

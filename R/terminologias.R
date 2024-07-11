@@ -56,12 +56,15 @@ rm(list = objetos_cad, objetos_cad)
 # Criando a base somente de bancos ----------------------------------------
 
 bancos <- dados |>
-  filter(SETOR_ATIV=="Bancos")
-
+  filter(SETOR_ATIV=="Bancos" |
+           DENOM_CIA %in% c("BRAZILIAN FINANCE E REAL ESTATE S.A.",
+                            "XP INVESTIMENTOS S.A."))
 # Retirando os bancos da base ---------------------------------------------
 
 dados <- dados |>
-  filter(SETOR_ATIV!="Bancos")
+  filter(SETOR_ATIV!="Bancos") |>
+  filter(!DENOM_CIA %in% c("BRAZILIAN FINANCE E REAL ESTATE S.A.",
+                           "XP INVESTIMENTOS S.A."))
 
 # Qtde de empresas listadas na B3 -----------------------------------------
 
@@ -86,13 +89,6 @@ empresas_triplicadas <- data.frame("n"=unique(triplicadas$DENOM_CIA))
 
 dados <- dados |>
   distinct()
-
-
-# Salvando ----------------------------------------------------------------
-
-openxlsx::write.xlsx(dados,"data/dfp_corrigido_BPA_con_2022.xlsx")
-
-openxlsx::write.xlsx(bancos,"data/dfp_bancos_BPA_con_2022.xlsx")
 
 
 

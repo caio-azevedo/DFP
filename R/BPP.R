@@ -48,11 +48,6 @@ dados <- bind_rows(dados_,tc_sa)
 
 rm(dados_, tc_sa)
 
-# Qtde de empresas listadas na B3 -----------------------------------------
-
-empresas <- dados |>
-  distinct(DENOM_CIA)
-
 
 # Identificar observações duplicadas em todas as colunas ------------------
 
@@ -91,13 +86,22 @@ rm(list = objetos_cad, objetos_cad)
 # Criando a base somente de bancos ----------------------------------------
 
 bancos <- dados |>
-  filter(SETOR_ATIV=="Bancos")
+  filter(SETOR_ATIV=="Bancos" |
+         DENOM_CIA%in%c("BRAZILIAN FINANCE E REAL ESTATE S.A.",
+                      "XP INVESTIMENTOS S.A."))
 
 
 # Retirando os bancos da base ---------------------------------------------
 
 dados <- dados |>
-  filter(SETOR_ATIV!="Bancos")
+  filter(SETOR_ATIV!="Bancos") |>
+  filter(!DENOM_CIA %in% c("BRAZILIAN FINANCE E REAL ESTATE S.A.",
+                      "XP INVESTIMENTOS S.A."))
+
+# Qtde de empresas listadas na B3 -----------------------------------------
+
+empresas <- dados |>
+  distinct(DENOM_CIA)
 
 # Salvando ----------------------------------------------------------------
 
@@ -323,7 +327,7 @@ graf1 <- df |>
   geom_col(fill = "#4C9900",,
            color = "black",
            show.legend = FALSE) +
-  scale_x_continuous(breaks = seq(0,270,30)) +
+  scale_x_continuous(breaks = seq(0,270,30), limits = c(0,270)) +
   ggthemes::scale_color_hc() +
   labs(title = "Quinta ramificação",
        x = "Quantidade de terminologias utilizadas",
@@ -344,7 +348,7 @@ graf2 <- df |>
   geom_col(fill = "#4C9900",
            color = "black",
            show.legend = FALSE) +
-  scale_x_continuous(breaks=seq(0,140,10)) +
+  scale_x_continuous(breaks=seq(0,135,15), limits = c(0,135)) +
   ggthemes::scale_color_hc() +
   labs(title = "Quarta ramificação",
        x = "Quantidade de terminologias utilizadas",
