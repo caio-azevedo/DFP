@@ -122,7 +122,7 @@ contas <- dados |>
 terminologias <- dados |>
   distinct(DS_CONTA, CD_CONTA)
 
-terminologias_unica <- terminologias |>
+terminologias_unica <- dados |>
   distinct(DS_CONTA)
 
 
@@ -278,8 +278,38 @@ tab6 <-  data.frame("Tipo"= tipo,
 
 
 
+# Criando a tabela de terminologias com contas diferentes -----------------
+
+ds_conta <- terminologias_unica |>
+  pull()
+
+ds_bp <- map_dfr(ds_conta, ~{
+  dados |>
+    filter(DS_CONTA==.x) |>
+    count(CD_CONTA) |>
+    mutate(Cod = .x)
+})
+
+ds_bp <- ds_bp |>
+  mutate(ramificacao = case_when(
+    nchar(CD_CONTA)==1 ~ "1",
+    nchar(CD_CONTA)==4 ~ "2",
+    nchar(CD_CONTA)==7 ~ "3",
+    nchar(CD_CONTA)==10 ~ "4",
+    nchar(CD_CONTA)==13 ~ "5",
+  )) |>
+  relocate(ramificacao, .before = n)
+
+tab7 <- ds_bp |>
+  group_by(Cod) |>
+  summarise("Freq"=n(),
+            "uso"=sum(n)) |>
+  arrange(desc(Freq)) |>
+  slice_head(n=20)
+
 # Exportando tabelas em Tex -----------------------------------------------
-tab_list <- list(tab, tab2, tab3, tab4, tab5, tab6)
+
+tab_list <- list(tab, tab2, tab3, tab4, tab5, tab6, tab7)
 
 walk2(tab_list, seq_along(tab_list), tabelas_BPP)
 
@@ -290,26 +320,26 @@ tema <- ggthemes::theme_hc() +
   theme(axis.title = element_text(
     family = "Verdana",
     face = "bold",
-    size = 20
+    size = 26
   ),
   axis.text = element_text(
     family = "Verdana",
-    size = 15
+    size = 20
   ),
   plot.caption = element_text(
     family = "Verdana",
     face = "bold",
-    size = 15,
+    size = 20,
     hjust = 1
   ),
   legend.text = element_text(
     family = "Verdana",
     face = "bold",
-    size = 15
+    size = 20
   ),
   legend.title = element_text(
     family = "Verdana",
-    size = 12
+    size = 20
     )
   )
 
@@ -334,7 +364,7 @@ graf1 <- df |>
   labs(title = "Quinto Nível",
        x = "Quantidade de terminologias utilizadas",
        y = "Código da conta") +
-  geom_label(aes(label = nomenclatura), size=7)
+  geom_label(aes(label = nomenclatura), size=10)
 
 
 # 4 ramificações ----------------------------------------------------------
@@ -355,7 +385,7 @@ graf2 <- df |>
   labs(title = "Quarto Nível",
        x = "Quantidade de terminologias utilizadas",
        y = "Código da conta") +
-  geom_label(aes(label = nomenclatura), size= 7)
+  geom_label(aes(label = nomenclatura), size= 10)
 
 # Boxplot -----------------------------------------------------------------
 
@@ -397,10 +427,10 @@ fig3 <- df |>
   filter(ramificacao > 3) |>
   ggplot()+
   aes(x = nomenclatura, y = empresas)+
-  geom_point(size=4, colour = "#4C9900") + facet_wrap(~ ramificacao, nrow = 2) +
+  geom_point(size=6, colour = "#4C9900") + facet_wrap(~ ramificacao, nrow = 2) +
   scale_x_continuous(breaks=seq(0,270,30)) +
   ggthemes::scale_color_hc() +
-  tema + theme(strip.text = element_text(size = 25,
+  tema + theme(strip.text = element_text(size = 30,
                                          family = "Verdana",
                                          face = "bold",
                                          color = "white"),

@@ -33,7 +33,7 @@ contas_barra_1 <- function(cd){
           axis.title = element_blank(),
           axis.line.y.left = element_line(color = "black"),
           axis.text.y = element_blank(),
-          axis.text.x = element_text(family = "Verdana", size = 16)) +
+          axis.text.x = element_text(family = "Verdana", size = 25)) +
     geom_shadowtext(data = subset(base, Freq <= 0.4*MAX),
                     aes(Freq, y = Cod_fator, label = Cod_fator),
                     hjust = 0,
@@ -51,7 +51,6 @@ contas_barra_1 <- function(cd){
       colour = "white",
       family = "Verdana",
       size = 12) +
-    labs(title = glue("Conta {cd}")) +
     theme(
       plot.title = element_text(
         family = "Verdana",
@@ -101,7 +100,7 @@ contas_barra_2 <- function(cd){
           axis.title = element_blank(),
           axis.line.y.left = element_line(color = "black"),
           axis.text.y = element_blank(),
-          axis.text.x = element_text(family = "Verdana", size = 16)) +
+          axis.text.x = element_text(family = "Verdana", size = 25)) +
     geom_shadowtext(data = subset(base, Freq <= 0.4*MAX),
                     aes(Freq, y = Cod_fator, label = Cod_fator),
                     hjust = 0,
@@ -119,7 +118,6 @@ contas_barra_2 <- function(cd){
       colour = "white",
       family = "Verdana",
       size = 12) +
-    labs(title = glue("Conta {cd}")) +
     theme(
       plot.title = element_text(
         family = "Verdana",
