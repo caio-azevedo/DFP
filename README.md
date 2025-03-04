@@ -51,17 +51,50 @@ E-mail: fabio.gama@ufdpar.edu.br
 
 ORCID(https://orcid.org/0000-0003-3772-411X) 
 
-## Índice
-
-1. [Tutorial de Execução dos Scripts](#tutorial-de-execução-dos-scripts)
-2. [Como Executar o Código](#como-executar-o-código)
-3. [Dicas e Solução de Problemas](#dicas-e-solução-de-problemas)
-
-## Tutorial de Execução dos Scripts
+# Tutorial de Execução dos Scripts
 
 Este tutorial tem como objetivo orientar os usuários sobre como executar o código deste repositório, bem como descrever brevemente os scripts contidos na pasta `R`.
 
-### Descrição dos Arquivos
+
+## Índice
+1. [Primeiros passos: como executar o código](#como-executar-o-código)
+2. [Descrição dos Arquivos](#descrição-dos-arquivos)
+3. [Dicas e Solução de Problemas](#dicas-e-solução-de-problemas)
+
+## Pré-Requisitos
+
+Antes de executar os scripts, certifique-se de ter instalado:
+
+- [R](https://www.r-project.org/)
+- [RStudio](https://www.rstudio.com/) (opcional, mas recomendado)
+
+
+## Primeiros passos: como executar o código
+
+1. **Clone ou Baixe o Repositório:**
+
+   Para usuários com conta no Github: utilize o comando abaixo para clonar o repositório via Git:
+   
+   ```bash
+   git clone https://github.com/caio-azevedo/DFP.git
+   ```
+
+  Para usuários que não utilizam o Github: baixe o repositório clicando [aqui](https://github.com/caio-azevedo/DFP/archive/refs/heads/master.zip).
+
+2. **Abra o Projeto:**
+
+   Caso tenha feito o dowload do repositório, descompacte o arquivo e abra o projeto `DFP.RProj` no RStudio ou na sua IDE preferida. Caso esteja utilizando RStudio, abra a pasta `R` dentro do ambiente do RStudio no painel de Arquivos ("Files").
+
+3. **Execute o Script Principal:**
+
+   Abra o arquivo `main.R` e execute-o (Ctrl + Shift + Enter). Esse script é o ponto de entrada do projeto e fará a execução de todos os demais scripts na ordem correta.
+
+4. **Verifique os Resultados:**
+
+   Após a execução, confira os resultados e outputs gerados (por exemplo, tabelas, gráficos, arquivos de saída).
+
+
+## Descrição dos Arquivos
 
 O repositório contém diversos scripts que, em conjunto, permitem a replicação dos dados, tabelas e gráficos apresentados no artigo. No diretório [R](https://github.com/caio-azevedo/DFP/tree/master/R) você encontrará todos os scripts em R necessários para a execução do projeto. A seguir, a função de cada arquivo:
 
@@ -101,38 +134,6 @@ O repositório contém diversos scripts que, em conjunto, permitem a replicaçã
   **Objetivo:** Realizar análises estatísticas e gerar os gráficos do estudo.  
   **Descrição:** Este script é responsável por processar os dados de forma visual, gerando gráficos que ilustram os principais achados da análise, complementando as informações apresentadas nas tabelas.
 
-
-### Pré-Requisitos
-
-Antes de executar os scripts, certifique-se de ter instalado:
-
-- [R](https://www.r-project.org/)
-- [RStudio](https://www.rstudio.com/) (opcional, mas recomendado)
-
-
-## Como Executar o Código
-
-1. **Clone ou Baixe o Repositório:**
-
-   Utilize o comando abaixo para clonar o repositório via Git:
-   
-   ```bash
-   git clone https://github.com/caio-azevedo/DFP.git
-   ```
-
-  Ou baixe clicando [aqui](https://github.com/caio-azevedo/DFP/archive/refs/heads/master.zip)
-
-2. **Abra o Projeto:**
-
-   Abra o projeto `DFP.RProj` no RStudio ou na sua IDE preferida. Navegue até o diretório [R](https://github.com/caio-azevedo/DFP/tree/master/R).
-
-3. **Execute o Script Principal:**
-
-   Abra o arquivo `main.R` e execute-o. Esse script é o ponto de entrada do projeto e fará a execução de todos os demais scripts na ordem correta.
-
-4. **Verifique os Resultados:**
-
-   Após a execução, confira os resultados e outputs gerados (por exemplo, tabelas, gráficos, arquivos de saída).
 
 ## Dicas e Solução de Problemas
 
