@@ -82,7 +82,7 @@ Antes de executar os scripts, certifique-se de ter instalado:
 
 2. **Abra o Projeto:**
 
-   Caso tenha feito o dowload do repositório, descompacte o arquivo e abra o projeto `DFP.RProj` no RStudio ou na sua IDE preferida. Caso esteja utilizando RStudio, abra a pasta `R` dentro do ambiente do RStudio no painel de Arquivos ("Files").
+   Caso tenha feito o dowload do repositório, descompacte o arquivo e abra o projeto `DFP.RProj` no RStudio ou na sua IDE preferida. Em seguida, caso esteja utilizando RStudio, abra a pasta `R` dentro do ambiente do RStudio no painel de Arquivos ("Files").
 
 3. **Execute o Script Principal:**
 
