@@ -5,19 +5,18 @@ rm(list=ls())
 graphics.off()
 
 # load packages -----------------------------------------------------------
-library(tidyverse)
-library(openxlsx)
-library(writexl)
-library(extrafont)
-library(ggthemes)
-library(xtable)
-library(glue)
-library(patchwork)
-library(grid)
-library(shadowtext)
-library(stringi)
-library(moments)
-library(GetFREData)
+
+pacotes <- c("tidyverse", "openxlsx", "writexl", "extrafont", "ggthemes",
+             "xtable", "glue", "patchwork", "grid", "shadowtext",
+             "stringi", "moments", "GetFREData")
+
+novos <- pacotes[!(pacotes %in% installed.packages()[, "Package"])]
+
+if(length(novos)) {
+  install.packages(novos, dependencies = TRUE)
+}
+
+lapply(pacotes, require, character.only = TRUE)
 
 # list functions ----------------------------------------------------------
 my_R_files <- list.files(path ="functions", pattern = '*.R',
@@ -31,9 +30,6 @@ source("R/01-import-and-clean-data.R")
 
 # Import summary script ---------------------------------------------------
 source("R/02-summary.R")
-
-# Import aux_tables script --------------------------------------------------
-source("R/aux_tables.R")
 
 # Import tables script --------------------------------------------------
 source("R/03-tables.R")
