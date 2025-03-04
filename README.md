@@ -120,6 +120,8 @@ Antes de executar os scripts, certifique-se de ter instalado:
    git clone https://github.com/caio-azevedo/DFP.git
    ```
 
+  Ou baixe clicando [aqui](https://github.com/caio-azevedo/DFP/archive/refs/heads/master.zip)
+
 2. **Abra o Projeto:**
 
    Abra o projeto `DFP.RProj` no RStudio ou na sua IDE preferida. Navegue até o diretório [R](https://github.com/caio-azevedo/DFP/tree/master/R).
