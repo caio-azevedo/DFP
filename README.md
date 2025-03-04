@@ -53,9 +53,9 @@ ORCID(https://orcid.org/0000-0003-3772-411X)
 
 ## Índice
 
-1. [Tutorial de Execução dos Scripts](#tutorial-de-execucao-dos-scripts)
-2. [Descrição dos Dados](#descrição-dos-dados)
-3. [Instalação](#instalação)
+1. [Tutorial de Execução dos Scripts](#tutorial-de-execução-dos-scripts)
+2. [Como Executar o Código](#como-executar-o-código)
+3. [Dicas e Solução de Problemas](#dicas-e-solução-de-problemas)
 
 ## Tutorial de Execução dos Scripts
 
@@ -115,8 +115,3 @@ Antes de executar os scripts, certifique-se de ter instalado:
   Se encontrar algum problema ou tiver sugestões de melhoria, sinta-se à vontade para abrir uma issue ou enviar um pull request.
 
 
-## Descrição dos Dados
-
-
-
-## Instalação
