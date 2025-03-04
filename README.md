@@ -71,28 +71,26 @@ No diretório [R](https://github.com/caio-azevedo/DFP/tree/master/R) você encon
 - **01-import-and-clean-data.R**:  
   O arquivo 01-import-and-clean-data.R é responsável por importar, limpar e pré-processar os dados da DFP referentes ao ano de 2022, preparando-os para as análises posteriores. De forma sucinta, ele realiza as seguintes etapas:
 
-Carregamento de Recursos:
-Inicia carregando funções personalizadas e o cadastro das empresas a partir do script cad_cia.R.
+1. **Carregamento de Recursos**:
+Inicia carregando funções personalizadas e o cadastro das empresas a partir do script `cad_cia.R`.
 
-Definição dos Balanços:
+2. **Definição dos Balanços**:
 Define os tipos de balanço a serem processados, identificados como "BPA" e "BPP".
 
-Importação e Filtragem dos Dados:
-Utiliza a função read_dfp para ler os dados e, em seguida, filtra apenas os registros do "último" exercício. Realiza um join com o cadastro de empresas para garantir a consistência das informações.
+3. **Importação e Filtragem dos Dados**:
+Utiliza a função (personalizada) read_dfp para ler os dados e, em seguida, filtra apenas os registros do "último" exercício. Realiza um join com o cadastro de empresas para garantir a consistência das informações.
 
-Segmentação dos Dados:
+4. **Segmentação dos Dados**:
 Separa os dados em duas categorias:
 
-Bancos: Identificados por meio do setor de atividade e nomes específicos.
-Não Bancos: Empresas que não se enquadram como bancos, após a aplicação dos filtros.
-Exportação dos Dados Processados:
+- Bancos: Identificados por meio do setor de atividade e nomes específicos.
+- Não Bancos: Empresas que não se enquadram como bancos, após a aplicação dos filtros.
+
+5. **Exportação dos Dados Processados**:
 Salva os conjuntos de dados resultantes (para bancos e não bancos) em arquivos Excel, facilitando o acesso e a consulta posterior.
 
-Geração de Sumários:
+6. **Geração de Sumários**:
 Cria sumários estatísticos que apresentam métricas como número de empresas, número de contas distintas e média de terminologias por conta, consolidando as informações para análise.
-
-Limpeza do Ambiente:
-Realiza a remoção de objetos temporários para manter o ambiente de trabalho organizado.
 
 - **02-summary.R**:  
   (Descreva aqui a finalidade deste script, por exemplo, “Realiza a análise estatística e gera gráficos.”)
