@@ -61,69 +61,45 @@ ORCID(https://orcid.org/0000-0003-3772-411X)
 
 Este tutorial tem como objetivo orientar os usuários sobre como executar o código deste repositório, bem como descrever brevemente os scripts contidos na pasta `R`.
 
-### Estrutura do Repositório
+### Descrição dos Arquivos
 
-No diretório [R](https://github.com/caio-azevedo/DFP/tree/master/R) você encontrará todos os scripts em R necessários para a execução do projeto. A execução dos scripts é centralizada no arquivo `main.R`, que coordena a chamada dos demais arquivos na ordem correta. A seguir, uma breve descrição dos principais scripts:
+O repositório contém diversos scripts que, em conjunto, permitem a replicação dos dados, tabelas e gráficos apresentados no artigo. No diretório [R](https://github.com/caio-azevedo/DFP/tree/master/R) você encontrará todos os scripts em R necessários para a execução do projeto. A seguir, a função de cada arquivo:
 
-- **main.R**:  
-  Script principal que orquestra a execução dos demais arquivos. Ao executar este script, todos os outros serão chamados na ordem adequada para que o fluxo do projeto seja mantido.
+- **main.R**  
+  **Objetivo:** Orquestrar a execução dos demais scripts na ordem correta.  
+  **Descrição:** Ao ser executado, este arquivo chama sequencialmente os scripts responsáveis pela importação, processamento, análise e visualização dos dados, garantindo que o fluxo de trabalho seja mantido sem erros.
 
-- **01-import-and-clean-data.R**:  
-  Este arquivo é responsável por importar, limpar e pré-processar os dados da DFP referentes ao ano de 2022, preparando-os para as análises posteriores. De forma sucinta, ele realiza as seguintes etapas:
+- **01-import-and-clean-data.R**  
+  **Objetivo:** Importar e preparar os dados da DFP (2022) para análise.  
+  **Descrição:**  
+  1. Carrega funções personalizadas e o cadastro de empresas (via `cad_cia.R`).  
+  2. Define os tipos de balanço a serem processados (BPA e BPP).  
+  3. Importa os dados utilizando uma função específica e filtra registros do “último” exercício, realizando um join com o cadastro de empresas.  
+  4. Segmenta os dados entre bancos e não bancos, exportando-os em arquivos Excel.  
+  5. Gera sumários estatísticos que consolidam informações relevantes para as análises posteriores.
 
-1. **Carregamento de Recursos**:
-Inicia carregando funções personalizadas e o cadastro das empresas a partir do script `cad_cia.R`.
+- **02-summary.R**  
+  **Objetivo:** Consolidar e ajustar os dados dos balanços.  
+  **Descrição:**  
+  1. Lê os dados para cada tipo de balanço com a função `read_dados` e remove duplicatas.  
+  2. Aplica filtros específicos para tratar os registros da empresa TC S.A., separando os dados em dois grupos (registros normais e os da versão "3").  
+  3. Une os conjuntos filtrados em uma lista (`dados_bp`), preparando a base para etapas seguintes.
 
-2. **Definição dos Balanços**:
-Define os tipos de balanço a serem processados, identificados como "BPA" e "BPP".
+- **03-tables.R**  
+  **Objetivo:** Gerar, formatar e exportar as tabelas com os dados processados.  
+  **Descrição:**  
+  1. Importa funções auxiliares de formatação e exportação (via `aux_tables.R`).  
+  2. Cria diversas tabelas:  
+     - **Tabela 2:** Resumo de denominações associadas a códigos de conta, com os 20 principais registros.  
+     - **Tabela 3:** Consolidação das terminologias distintas para os balanços de Ativo e Passivo.  
+     - **Tabela 4:** Estatísticas (média, mínimo, máximo e mediana) do número de terminologias por código, segmentadas por nível.  
+     - **Tabelas 5 e 6:** Exemplos de contas dos níveis quatro e cinco que apresentam apenas uma terminologia.  
+     - **Tabela de Frequência:** Registros com maior nomenclatura para a ramificação 5.  
+  3. Exporta as tabelas em LaTeX e em um único arquivo Excel.
 
-3. **Importação e Filtragem dos Dados**:
-Utiliza a função (personalizada) read_dfp para ler os dados e, em seguida, filtra apenas os registros do "último" exercício. Realiza um join com o cadastro de empresas para garantir a consistência das informações.
-
-4. **Segmentação dos Dados**:
-Separa os dados em duas categorias:
-
-- Bancos: Identificados por meio do setor de atividade e nomes específicos.
-- Não Bancos: Empresas que não se enquadram como bancos, após a aplicação dos filtros.
-
-5. **Exportação dos Dados Processados**:
-Salva os conjuntos de dados resultantes (para bancos e não bancos) em arquivos Excel, facilitando o acesso e a consulta posterior.
-
-6. **Geração de Sumários**:
-Cria sumários estatísticos que apresentam métricas como número de empresas, número de contas distintas e média de terminologias por conta, consolidando as informações para análise.
-
-- **02-summary.R**:  
-  Este arquivo é responsável por consolidar os dados de balanço para cada tipo definido em *bp* (por exemplo, BPA e BPP), realizando os seguintes passos:
-
-1. **Leitura e limpeza:**  
-  Para cada balanço, o script lê os dados com a função (personalizada) `read_dados` e remove registros duplicados.
-
-2. **Filtragem específica:**  
-  Separa os dados em dois grupos:
-  - Registros do último exercício que **não** pertencem à empresa *TC S.A.*
-  - Registros do último exercício da *TC S.A.* com a versão "3".
-
-3. **Combinação dos dados:**  
-  Une os dois conjuntos filtrados com `bind_rows()` e armazena o resultado em uma lista (`dados_bp`), facilitando o uso nas etapas seguintes do projeto.
-
-- **03-tables.R**:  
-  Este arquivo é responsável por criar, formatar e exportar diversas tabelas a partir dos dados processados. De forma sucinta, ele realiza as seguintes etapas:
-
-1. **Importação de funções auxiliares:**  
-  Inicia carregando o script auxiliar `aux_tables.R`, que contém funções de apoio para a formatação e exportação das tabelas.
-
-2. **Criação das Tabelas:**  
-  - **Tabela 2:** Agrupa e resume exemplos de denominações associadas a diferentes códigos de conta, ordenando por frequência e selecionando os 20 principais registros, e depois realizando junção entre os balanços.
-  - **Tabela 3:** Consolida informações sobre a quantidade de terminologias diferentes para os balanços de Ativo e Passivo, unindo os resultados via join pela coluna "Tipo".
-  - **Tabela 4:** Calcula estatísticas (média, mínimo, máximo e mediana) do número de terminologias por código de conta, segmentadas pelo nível.
-  - **Tabelas 5 e 6:** Extraem exemplos de contas dos níveis quatro e cinco que utilizam apenas uma terminologia, aplicando filtros específicos e combinando os resultados dos balanços.
-  - **Tabela de Frequência:** Gera uma tabela com os 10 registros de maior nomenclatura para a ramificação 5.
-
-3. **Exportação dos Resultados:**  
-  Agrupa todas as tabelas em uma lista e, em seguida, exporta os dados tanto em formato LaTeX (utilizando uma função customizada) quanto em um único arquivo Excel.
-
-- **04-graphics.R**:  
-  (Descreva aqui a finalidade deste script, por exemplo, “Realiza a análise estatística e gera gráficos.”)
+- **04-graphics.R**  
+  **Objetivo:** Realizar análises estatísticas e gerar os gráficos do estudo.  
+  **Descrição:** Este script é responsável por processar os dados de forma visual, gerando gráficos que ilustram os principais achados da análise, complementando as informações apresentadas nas tabelas.
 
 
 ### Pré-Requisitos
