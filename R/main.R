@@ -35,7 +35,7 @@ source("R/02-summary.R")
 source("R/03-tables.R")
 
 # Import graphics script --------------------------------------------------
-source("R/04-graphics.R")
+#source("R/04-graphics.R")
 
 # Figura 1: Sumário das informações amostradas
 print(sumario)
