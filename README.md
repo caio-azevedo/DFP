@@ -78,8 +78,7 @@ Antes de executar os scripts, certifique-se de ter instalado:
    ```bash
    git clone https://github.com/caio-azevedo/DFP.git
    ```
-
-  Para usuários que não utilizam o Github: baixe o repositório clicando [aqui](https://github.com/caio-azevedo/DFP/archive/refs/heads/master.zip).
+   Para usuários que não utilizam o Github: baixe o repositório clicando [aqui](https://github.com/caio-azevedo/DFP/archive/refs/heads/master.zip).
 
 2. **Abra o Projeto:**
 
