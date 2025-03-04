@@ -69,7 +69,7 @@ No diretório [R](https://github.com/caio-azevedo/DFP/tree/master/R) você encon
   Script principal que orquestra a execução dos demais arquivos. Ao executar este script, todos os outros serão chamados na ordem adequada para que o fluxo do projeto seja mantido.
 
 - **01-import-and-clean-data.R**:  
-  O arquivo 01-import-and-clean-data.R é responsável por importar, limpar e pré-processar os dados da DFP referentes ao ano de 2022, preparando-os para as análises posteriores. De forma sucinta, ele realiza as seguintes etapas:
+  Este arquivo é responsável por importar, limpar e pré-processar os dados da DFP referentes ao ano de 2022, preparando-os para as análises posteriores. De forma sucinta, ele realiza as seguintes etapas:
 
 1. **Carregamento de Recursos**:
 Inicia carregando funções personalizadas e o cadastro das empresas a partir do script `cad_cia.R`.
@@ -93,19 +93,38 @@ Salva os conjuntos de dados resultantes (para bancos e não bancos) em arquivos 
 Cria sumários estatísticos que apresentam métricas como número de empresas, número de contas distintas e média de terminologias por conta, consolidando as informações para análise.
 
 - **02-summary.R**:  
-  (Descreva aqui a finalidade deste script, por exemplo, “Realiza a análise estatística e gera gráficos.”)
+  Este arquivo é responsável por consolidar os dados de balanço para cada tipo definido em *bp* (por exemplo, BPA e BPP), realizando os seguintes passos:
+
+1. **Leitura e limpeza:**  
+  Para cada balanço, o script lê os dados com a função (personalizada) `read_dados` e remove registros duplicados.
+
+2. **Filtragem específica:**  
+  Separa os dados em dois grupos:
+  - Registros do último exercício que **não** pertencem à empresa *TC S.A.*
+  - Registros do último exercício da *TC S.A.* com a versão "3".
+
+3. **Combinação dos dados:**  
+  Une os dois conjuntos filtrados com `bind_rows()` e armazena o resultado em uma lista (`dados_bp`), facilitando o uso nas etapas seguintes do projeto.
 
 - **03-tables.R**:  
-  (Descreva aqui a finalidade deste script, por exemplo, “Realiza a análise estatística e gera gráficos.”)
+  Este arquivo é responsável por criar, formatar e exportar diversas tabelas a partir dos dados processados. De forma sucinta, ele realiza as seguintes etapas:
+
+1. **Importação de funções auxiliares:**  
+  Inicia carregando o script auxiliar `aux_tables.R`, que contém funções de apoio para a formatação e exportação das tabelas.
+
+2. **Criação das Tabelas:**  
+  - **Tabela 2:** Agrupa e resume exemplos de denominações associadas a diferentes códigos de conta, ordenando por frequência e selecionando os 20 principais registros, e depois realizando junção entre os balanços.
+  - **Tabela 3:** Consolida informações sobre a quantidade de terminologias diferentes para os balanços de Ativo e Passivo, unindo os resultados via join pela coluna "Tipo".
+  - **Tabela 4:** Calcula estatísticas (média, mínimo, máximo e mediana) do número de terminologias por código de conta, segmentadas pelo nível.
+  - **Tabelas 5 e 6:** Extraem exemplos de contas dos níveis quatro e cinco que utilizam apenas uma terminologia, aplicando filtros específicos e combinando os resultados dos balanços.
+  - **Tabela de Frequência:** Gera uma tabela com os 10 registros de maior nomenclatura para a ramificação 5.
+
+3. **Exportação dos Resultados:**  
+  Agrupa todas as tabelas em uma lista e, em seguida, exporta os dados tanto em formato LaTeX (utilizando uma função customizada) quanto em um único arquivo Excel.
 
 - **04-graphics.R**:  
   (Descreva aqui a finalidade deste script, por exemplo, “Realiza a análise estatística e gera gráficos.”)
 
-- **aux_tables.R**:  
-  (Descreva aqui a finalidade deste script, por exemplo, “Processa os dados brutos e gera as tabelas intermediárias.”)
-
-- **cad_cia.R**:  
-  (Descreva aqui a finalidade deste script, por exemplo, “Realiza a análise estatística e gera gráficos.”)
 
 ### Pré-Requisitos
 
