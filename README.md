@@ -53,12 +53,66 @@ ORCID(https://orcid.org/0000-0003-3772-411X)
 
 ## Índice
 
-1. [Descrição dos Scripts](#descrição-dos-scripts)
+1. [Tutorial de Execução dos Scripts](#tutorial-de-execucao-dos-scripts)
 2. [Descrição dos Dados](#descrição-dos-dados)
 3. [Instalação](#instalação)
 
-## Descrição dos Scripts
+## Tutorial de Execução dos Scripts
 
+Este tutorial tem como objetivo orientar os usuários sobre como executar o código deste repositório, bem como descrever brevemente os scripts contidos na pasta `R`.
+
+### Estrutura do Repositório
+
+No diretório [R](https://github.com/caio-azevedo/DFP/tree/master/R) você encontrará todos os scripts em R necessários para a execução do projeto. A execução dos scripts é centralizada no arquivo `main.R`, que coordena a chamada dos demais arquivos na ordem correta. A seguir, uma breve descrição dos principais scripts:
+
+- **main.R**:  
+  Script principal que orquestra a execução dos demais arquivos. Ao executar este script, todos os outros serão chamados na ordem adequada para que o fluxo do projeto seja mantido.
+
+- **[Script_2].R**:  
+  (Descreva aqui a finalidade deste script, por exemplo, “Processa os dados brutos e gera as tabelas intermediárias.”)
+
+- **[Script_3].R**:  
+  (Descreva aqui a finalidade deste script, por exemplo, “Realiza a análise estatística e gera gráficos.”)
+
+
+### Pré-Requisitos
+
+Antes de executar os scripts, certifique-se de ter instalado:
+
+- [R](https://www.r-project.org/)
+- [RStudio](https://www.rstudio.com/) (opcional, mas recomendado)
+
+
+## Como Executar o Código
+
+1. **Clone ou Baixe o Repositório:**
+
+   Utilize o comando abaixo para clonar o repositório via Git:
+   
+   ```bash
+   git clone https://github.com/caio-azevedo/DFP.git
+   ```
+
+2. **Abra o Projeto:**
+
+   Abra o projeto no RStudio ou na sua IDE preferida. Navegue até o diretório `R`.
+
+3. **Execute o Script Principal:**
+
+   Abra o arquivo `main.R` e execute-o. Esse script é o ponto de entrada do projeto e fará a execução de todos os demais scripts na ordem correta.
+
+4. **Verifique os Resultados:**
+
+   Após a execução, confira os resultados e outputs gerados (por exemplo, tabelas, gráficos, arquivos de saída).
+
+## Dicas e Solução de Problemas
+
+
+- **Ordem de Execução:**  
+  O arquivo `main.R` foi desenvolvido para garantir que todos os scripts sejam executados na sequência necessária. Evite executar os scripts individualmente, a menos que tenha certeza da ordem correta.
+
+- **Contribuições:**  
+  Se encontrar algum problema ou tiver sugestões de melhoria, sinta-se à vontade para abrir uma issue ou enviar um pull request.
 
 
 ## Descrição dos Dados
