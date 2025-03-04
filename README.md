@@ -68,12 +68,23 @@ No diretório [R](https://github.com/caio-azevedo/DFP/tree/master/R) você encon
 - **main.R**:  
   Script principal que orquestra a execução dos demais arquivos. Ao executar este script, todos os outros serão chamados na ordem adequada para que o fluxo do projeto seja mantido.
 
-- **[Script_2].R**:  
+- **01-import-and-clean-data.R**:  
   (Descreva aqui a finalidade deste script, por exemplo, “Processa os dados brutos e gera as tabelas intermediárias.”)
 
-- **[Script_3].R**:  
+- **02-summary.R**:  
   (Descreva aqui a finalidade deste script, por exemplo, “Realiza a análise estatística e gera gráficos.”)
 
+- **03-tables.R**:  
+  (Descreva aqui a finalidade deste script, por exemplo, “Realiza a análise estatística e gera gráficos.”)
+
+- **04-graphics.R**:  
+  (Descreva aqui a finalidade deste script, por exemplo, “Realiza a análise estatística e gera gráficos.”)
+
+- **aux_tables.R**:  
+  (Descreva aqui a finalidade deste script, por exemplo, “Processa os dados brutos e gera as tabelas intermediárias.”)
+
+- **cad_cia.R**:  
+  (Descreva aqui a finalidade deste script, por exemplo, “Realiza a análise estatística e gera gráficos.”)
 
 ### Pré-Requisitos
 
@@ -95,7 +106,7 @@ Antes de executar os scripts, certifique-se de ter instalado:
 
 2. **Abra o Projeto:**
 
-   Abra o projeto no RStudio ou na sua IDE preferida. Navegue até o diretório `R`.
+   Abra o projeto `DFP.RProj` no RStudio ou na sua IDE preferida. Navegue até o diretório [R](https://github.com/caio-azevedo/DFP/tree/master/R).
 
 3. **Execute o Script Principal:**
 
