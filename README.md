@@ -6,7 +6,8 @@ Repositório dos scripts utilizados no desenvolvimento do artigo "A despadroniza
 A despadronização da "padronização": um olhar sob o Balanço Patrominal das empresas listadas na B3
 
 **Autores**: 
-Lorrane Almeida de Sousa
+
+* Lorrane Almeida de Sousa
 
 Bacharela em Ciências Contábeis pela Universidade Federal do Delta do Parnaíba (UFDPar), Brasil.
 
@@ -14,7 +15,8 @@ E-mail: lorrane.sousa@ufdpar.edu.br
 
 ORCID(https://orcid.org/0009-0006-1625-0049)
 
-Caio Oliveira Azevedo
+
+* Caio Oliveira Azevedo
 
 Mestre em Economia Aplicada pela Universidade Federal da Paraíba (UFPB), Brasil.
 
@@ -22,7 +24,8 @@ E-mail: caio.azevedo@live.com
 
 ORCID(https://orcid.org/0000-0002-7296-4939)
 
-Maria Isaura da Costa Neta
+
+* Maria Isaura da Costa Neta
 
 Bacharela em Ciências Contábeis pela Universidade Federal da Paraíba (UFPB), Brasil.
 
@@ -30,7 +33,8 @@ E-mail: maria.isaura@academico.ufpb.br
 
 ORCID(https://orcid.org/0000-0003-0893-2577)
 
-Fábio Júnior Clemente Gama
+
+* Fábio Júnior Clemente Gama
 
 Doutor em Economia Aplicada pela Universidade Federal de Juiz de Fora (UFJF), Brasil.
 
