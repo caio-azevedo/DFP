@@ -1,8 +1,7 @@
+[![Project Status: Active](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 
 # Arquivos para replicação dos dados, tabelas e gráficos
 Repositório dos scripts utilizados no desenvolvimento do artigo "A despadronização da “padronização”: um panorama da complexidade terminológica dos balanços patrimoniais no Brasil".
-
-[![Project Status: Active](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 
 # Informações do artigo
 
