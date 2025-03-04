@@ -1,20 +1,3 @@
-library(tidyverse)
-library(openxlsx)
-library(glue)
-
-
-# Limpando ----------------------------------------------------------------
-
-rm(list=ls())
-
-
-# list functions ----------------------------------------------------------
-my_R_files <- list.files(path ="functions", pattern = '*.R',
-                         full.names = TRUE)
-
-# Load all functions in R  ------------------------------------------------
-sapply(my_R_files, source)
-
 # Carregando funções personalizadas e dados das empresas
 source("R/cad_cia.R")
 
@@ -37,7 +20,6 @@ create_summary <- function(dados, tipo) {
       round(n_distinct(dados %>% select(DS_CONTA, CD_CONTA) %>% distinct(DS_CONTA)) / n_distinct(dados$CD_CONTA), 2)
     )
   )
-  write.xlsx(sumario, glue("data/sumario_{tipo}_con_2022.xlsx"))
   return(sumario)
 }
 
@@ -48,9 +30,10 @@ dados_lista <- map(bp, ~ {
     filter(ORDEM_EXERC == "ÚLTIMO") %>%
     inner_join(semi_join(cad_cia, ., by = "CD_CVM"))
 
+
   # Segmentação dos dados em bancos e não bancos
   bancos <- dados %>% filter(SETOR_ATIV == "Bancos"| DENOM_CIA %in% c("BRAZILIAN FINANCE E REAL ESTATE S.A.",
-                                                                  "XP INVESTIMENTOS S.A."))
+                                                                      "XP INVESTIMENTOS S.A."))
   dados_nao_bancos <- dados %>% filter(SETOR_ATIV != "Bancos") %>%
     filter(!DENOM_CIA %in% c("BRAZILIAN FINANCE E REAL ESTATE S.A.",
                              "XP INVESTIMENTOS S.A."))
@@ -68,3 +51,7 @@ dados_lista <- map(bp, ~ {
 
 # Limpeza final opcional para objetos começando com "cad"
 rm(list = ls(pattern = "^cad"))
+
+sumario <- cbind(dados_lista[[1]][["sumario"]], dados_lista[[2]][["sumario"]][2])
+sumario <- rename(sumario, "Ativo" = 2, "Passivo" = 3)
+rm(dados_lista)
