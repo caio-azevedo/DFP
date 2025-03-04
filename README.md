@@ -69,7 +69,30 @@ No diretório [R](https://github.com/caio-azevedo/DFP/tree/master/R) você encon
   Script principal que orquestra a execução dos demais arquivos. Ao executar este script, todos os outros serão chamados na ordem adequada para que o fluxo do projeto seja mantido.
 
 - **01-import-and-clean-data.R**:  
-  (Descreva aqui a finalidade deste script, por exemplo, “Processa os dados brutos e gera as tabelas intermediárias.”)
+  O arquivo 01-import-and-clean-data.R é responsável por importar, limpar e pré-processar os dados da DFP referentes ao ano de 2022, preparando-os para as análises posteriores. De forma sucinta, ele realiza as seguintes etapas:
+
+Carregamento de Recursos:
+Inicia carregando funções personalizadas e o cadastro das empresas a partir do script cad_cia.R.
+
+Definição dos Balanços:
+Define os tipos de balanço a serem processados, identificados como "BPA" e "BPP".
+
+Importação e Filtragem dos Dados:
+Utiliza a função read_dfp para ler os dados e, em seguida, filtra apenas os registros do "último" exercício. Realiza um join com o cadastro de empresas para garantir a consistência das informações.
+
+Segmentação dos Dados:
+Separa os dados em duas categorias:
+
+Bancos: Identificados por meio do setor de atividade e nomes específicos.
+Não Bancos: Empresas que não se enquadram como bancos, após a aplicação dos filtros.
+Exportação dos Dados Processados:
+Salva os conjuntos de dados resultantes (para bancos e não bancos) em arquivos Excel, facilitando o acesso e a consulta posterior.
+
+Geração de Sumários:
+Cria sumários estatísticos que apresentam métricas como número de empresas, número de contas distintas e média de terminologias por conta, consolidando as informações para análise.
+
+Limpeza do Ambiente:
+Realiza a remoção de objetos temporários para manter o ambiente de trabalho organizado.
 
 - **02-summary.R**:  
   (Descreva aqui a finalidade deste script, por exemplo, “Realiza a análise estatística e gera gráficos.”)
