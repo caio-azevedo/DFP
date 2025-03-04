@@ -3,7 +3,7 @@ cad_cia_aberta <- read.csv(url, sep = ";",
                                     fileEncoding = "latin1")
 
 cad_cia_aberta <- cad_cia_aberta |>
-  select(3,10:11,47)
+  dplyr::select(3,10:11,47)
 
 url <- "https://dados.cvm.gov.br/dados/CIA_ESTRANG/CAD/DADOS/cad_cia_estrang.csv"
 cad_cia_estrang <- read.csv(url, sep = ";",

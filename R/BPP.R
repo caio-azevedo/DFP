@@ -318,27 +318,27 @@ walk2(tab_list, seq_along(tab_list), tabelas_BPP)
 extrafont::loadfonts()
 tema <- ggthemes::theme_hc() +
   theme(axis.title = element_text(
-    family = "Verdana",
+    family = "Palatino Linotype",
     face = "bold",
     size = 26
   ),
   axis.text = element_text(
-    family = "Verdana",
+    family = "Palatino Linotype",
     size = 20
   ),
   plot.caption = element_text(
-    family = "Verdana",
+    family = "Palatino Linotype",
     face = "bold",
     size = 20,
     hjust = 1
   ),
   legend.text = element_text(
-    family = "Verdana",
+    family = "Palatino Linotype",
     face = "bold",
     size = 20
   ),
   legend.title = element_text(
-    family = "Verdana",
+    family = "Palatino Linotype",
     size = 20
     )
   )
@@ -364,7 +364,7 @@ graf1 <- df |>
   labs(title = "Quinto Nível",
        x = "Quantidade de terminologias utilizadas",
        y = "Código da conta") +
-  geom_label(aes(label = nomenclatura), size=10)
+  geom_label(aes(label = nomenclatura), size=10) + tema
 
 
 # 4 ramificações ----------------------------------------------------------
@@ -385,7 +385,7 @@ graf2 <- df |>
   labs(title = "Quarto Nível",
        x = "Quantidade de terminologias utilizadas",
        y = "Código da conta") +
-  geom_label(aes(label = nomenclatura), size= 10)
+  geom_label(aes(label = nomenclatura), size= 10) + tema
 
 # Boxplot -----------------------------------------------------------------
 
@@ -397,7 +397,7 @@ graf3 <- df |>
   scale_x_continuous(breaks=seq(0,270,30)) +
   ggthemes::scale_color_economist() +
   labs(x = "Qtde de terminologias utilizadas",
-       y = "Nível")
+       y = "Nível") + tema
 
 
 graf4 <- df |>
@@ -408,7 +408,7 @@ graf4 <- df |>
   scale_x_continuous(breaks=seq(0,270,30)) +
   ggthemes::scale_color_hc() +
   labs(x = "Qtde de terminologias utilizadas",
-       y = "Nível")
+       y = "Nível") + tema
 
 
 graf5 <- df |>
