@@ -1,6 +1,8 @@
+fonte <- "Times New Roman"
+
 contas_barra_1 <- function(cd){
 
-  text <- dados |>
+  text <- dados_bp[[1]] |>
     filter(CD_CONTA==cd) |>
     pull(DS_CONTA)
 
@@ -33,7 +35,7 @@ contas_barra_1 <- function(cd){
           axis.title = element_blank(),
           axis.line.y.left = element_line(color = "black"),
           axis.text.y = element_blank(),
-          axis.text.x = element_text(family = "Palatino Linotype", size = 25)) +
+          axis.text.x = element_text(family = fonte, size = 25)) +
     geom_shadowtext(data = subset(base, Freq <= 0.4*MAX),
                     aes(Freq, y = Cod_fator, label = Cod_fator),
                     hjust = 0,
@@ -41,7 +43,7 @@ contas_barra_1 <- function(cd){
                     colour = "#076fa2",
                     bg.colour = "white",
                     bg.r = 0.2,
-                    family = "Palatino Linotype",
+                    family = fonte,
                     size = 12) +
     geom_text(
       data = subset(base, Freq > 0.4*MAX),
@@ -49,16 +51,16 @@ contas_barra_1 <- function(cd){
       hjust = 0,
       nudge_x = 0.3,
       colour = "white",
-      family = "Palatino Linotype",
+      family = fonte,
       size = 12) +
     theme(
       plot.title = element_text(
-        family = "Palatino Linotype",
+        family = fonte,
         face = "bold",
         size = 22
       ),
       plot.subtitle = element_text(
-        family = "Palatino Linotype",
+        family = fonte,
         size = 20)) +
     theme(
       plot.margin = margin(0.02, 0.02, 0.05, 0.01, "npc")
@@ -67,7 +69,7 @@ contas_barra_1 <- function(cd){
 
 contas_barra_2 <- function(cd){
 
-  text <- dados |>
+  text <- dados_bp[[2]] |>
     filter(CD_CONTA==cd) |>
     pull(DS_CONTA)
 
@@ -100,7 +102,7 @@ contas_barra_2 <- function(cd){
           axis.title = element_blank(),
           axis.line.y.left = element_line(color = "black"),
           axis.text.y = element_blank(),
-          axis.text.x = element_text(family = "Palatino Linotype", size = 25)) +
+          axis.text.x = element_text(family = fonte, size = 25)) +
     geom_shadowtext(data = subset(base, Freq <= 0.4*MAX),
                     aes(Freq, y = Cod_fator, label = Cod_fator),
                     hjust = 0,
@@ -108,7 +110,7 @@ contas_barra_2 <- function(cd){
                     colour = "#4C9900",
                     bg.colour = "white",
                     bg.r = 0.2,
-                    family = "Palatino Linotype",
+                    family = fonte,
                     size = 12) +
     geom_text(
       data = subset(base, Freq > 0.4*MAX),
@@ -116,16 +118,16 @@ contas_barra_2 <- function(cd){
       hjust = 0,
       nudge_x = 0.3,
       colour = "white",
-      family = "Palatino Linotype",
+      family = fonte,
       size = 12) +
     theme(
       plot.title = element_text(
-        family = "Palatino Linotype",
+        family = fonte,
         face = "bold",
         size = 22
       ),
       plot.subtitle = element_text(
-        family = "Palatino Linotype",
+        family = fonte,
         size = 20)) +
     theme(
       plot.margin = margin(0.02, 0.02, 0.05, 0.01, "npc")

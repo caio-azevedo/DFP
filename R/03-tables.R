@@ -1,5 +1,5 @@
 # Import aux_tables script --------------------------------------------------
-source("R/aux_tables.R")
+source("R/auxiliares/aux_tables.R")
 
 # Tabela 2: Alguns exemplos de denominações associadas a diversos códigos de conta
 tab2 <- list()

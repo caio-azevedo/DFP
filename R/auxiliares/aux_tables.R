@@ -3,13 +3,15 @@ df <-  list()
 ds_bp <- list()
 term <- list()
 term_unica <- list()
+contas <- list()
 
 for (i in 1:2) {
 
 dados <- dados_bp[[i]]
+
 # Qtde de contas diferentes -----------------------------------------------
 
-contas <- dados |>
+contas[[i]] <- dados |>
   distinct(CD_CONTA) |>
   pull()
 
@@ -20,7 +22,7 @@ empresas <- dados |>
 
 
 # Loop --------------------------------------------------------------------
-df_bp[[i]] <- map_dfr(contas, ~ {
+df_bp[[i]] <- map_dfr(contas[[i]], ~ {
   dados %>%
     filter(CD_CONTA == .x) %>%
     count(DS_CONTA) %>%
